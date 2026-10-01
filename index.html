@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wavelength</title>
-<script>try{document.documentElement.setAttribute("data-palette",localStorage.getItem("wl-palette")||"lavande");}catch(e){}</script>
+<script>try{document.documentElement.setAttribute("data-palette",localStorage.getItem("wl-palette")||"basique");}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#ECEAFB; --ink:#1A1C43; --muted:#5E6192; --line:rgba(26,28,67,.14);
-  --face:#20235A; --face-ink:#F3F0FF; --rim:rgba(243,240,255,.18);
+  --bg:#F3F3F7; --ink:#1C1E2A; --muted:#656980; --line:rgba(28,30,42,.14);
+  --face:#262A3D; --face-ink:#F3F3F7; --rim:rgba(243,243,247,.18);
   --needle:#FFF4E0; --z2:#FFD166; --z3:#FF9F59; --z4:#F25C8A;
-  --accent:#F25C8A; --accent-ink:#fff; --field:rgba(26,28,67,.06);
+  --accent:#4C6FFF; --accent-ink:#fff; --field:rgba(28,30,42,.06);
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -21,80 +21,86 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#13153A; --ink:#F1EEFF; --muted:#9B9DCC; --line:rgba(241,238,255,.14);
-    --face:#232766; --rim:rgba(243,240,255,.16); --field:rgba(241,238,255,.07);
+    --bg:#14151D; --ink:#EEEEF3; --muted:#9496A8; --line:rgba(238,238,243,.14);
+    --face:#2A2E44; --rim:rgba(238,238,243,.16); --field:rgba(238,238,243,.07);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#13153A; --ink:#F1EEFF; --muted:#9B9DCC; --line:rgba(241,238,255,.14);
-  --face:#232766; --rim:rgba(243,240,255,.16); --field:rgba(241,238,255,.07);
+  --bg:#14151D; --ink:#EEEEF3; --muted:#9496A8; --line:rgba(238,238,243,.14);
+  --face:#2A2E44; --rim:rgba(238,238,243,.16); --field:rgba(238,238,243,.07);
   color-scheme:dark;
 }
 
-/* palettes alternatives (choix du joueur, local a son ecran) */
-:root[data-palette="ocean"]{
-  --bg:#E4F3FB; --ink:#0C2233; --muted:#4E7389; --line:rgba(12,34,51,.14);
-  --face:#0F3A52; --rim:rgba(234,248,255,.18); --field:rgba(12,34,51,.06);
-  --accent:#0EA5C4; --accent-ink:#fff;
+/* themes alternatifs (choix du joueur, local a son ecran) */
+:root[data-palette="pastel"]{
+  --bg:#FDEEF6; --ink:#4A3A52; --muted:#9C86A8; --line:rgba(74,58,82,.14);
+  --face:#9177A8; --face-ink:#FFF8FD; --rim:rgba(255,248,253,.22);
+  --z2:#FFE08A; --z3:#FFAE8C; --z4:#FF8FB3;
+  --accent:#FF8FB3; --accent-ink:#fff; --field:rgba(74,58,82,.06);
 }
 @media (prefers-color-scheme:dark){
-  :root[data-palette="ocean"]:not([data-theme="light"]){
-    --bg:#081B26; --ink:#E8F6FC; --muted:#7FA8BA; --line:rgba(232,246,252,.14);
-    --face:#0D3347; --rim:rgba(234,248,255,.16); --field:rgba(232,246,252,.07);
+  :root[data-palette="pastel"]:not([data-theme="light"]){
+    --bg:#2B2233; --ink:#F5E9F2; --muted:#C7AFD1; --line:rgba(245,233,242,.14);
+    --face:#4A3A5C; --rim:rgba(245,233,242,.18); --field:rgba(245,233,242,.07);
   }
 }
-:root[data-palette="ocean"][data-theme="dark"]{
-  --bg:#081B26; --ink:#E8F6FC; --muted:#7FA8BA; --line:rgba(232,246,252,.14);
-  --face:#0D3347; --rim:rgba(234,248,255,.16); --field:rgba(232,246,252,.07);
+:root[data-palette="pastel"][data-theme="dark"]{
+  --bg:#2B2233; --ink:#F5E9F2; --muted:#C7AFD1; --line:rgba(245,233,242,.14);
+  --face:#4A3A5C; --rim:rgba(245,233,242,.18); --field:rgba(245,233,242,.07);
 }
 
-:root[data-palette="foret"]{
-  --bg:#E8F3E6; --ink:#16321C; --muted:#577A5D; --line:rgba(22,50,28,.14);
-  --face:#1C4A27; --rim:rgba(239,251,234,.18); --field:rgba(22,50,28,.06);
-  --accent:#2FA84F; --accent-ink:#fff;
+:root[data-palette="noirblanc"]{
+  --bg:#F4F4F4; --ink:#111111; --muted:#666666; --line:rgba(17,17,17,.16);
+  --face:#1A1A1A; --face-ink:#FAFAFA; --rim:rgba(250,250,250,.18);
+  --needle:#EDEDED; --z2:#D9D9D9; --z3:#8F8F8F; --z4:#1A1A1A;
+  --accent:#111111; --accent-ink:#fff; --field:rgba(17,17,17,.06);
 }
 @media (prefers-color-scheme:dark){
-  :root[data-palette="foret"]:not([data-theme="light"]){
-    --bg:#0E2113; --ink:#E9F7E6; --muted:#86AC8B; --line:rgba(233,247,230,.14);
-    --face:#1E3F23; --rim:rgba(239,251,234,.16); --field:rgba(233,247,230,.07);
+  :root[data-palette="noirblanc"]:not([data-theme="light"]){
+    --bg:#0A0A0A; --ink:#F2F2F2; --muted:#9A9A9A; --line:rgba(242,242,242,.14);
+    --face:#121212; --rim:rgba(242,242,242,.16); --field:rgba(242,242,242,.07);
+    --accent:#F2F2F2; --accent-ink:#111111;
   }
 }
-:root[data-palette="foret"][data-theme="dark"]{
-  --bg:#0E2113; --ink:#E9F7E6; --muted:#86AC8B; --line:rgba(233,247,230,.14);
-  --face:#1E3F23; --rim:rgba(239,251,234,.16); --field:rgba(233,247,230,.07);
+:root[data-palette="noirblanc"][data-theme="dark"]{
+  --bg:#0A0A0A; --ink:#F2F2F2; --muted:#9A9A9A; --line:rgba(242,242,242,.14);
+  --face:#121212; --rim:rgba(242,242,242,.16); --field:rgba(242,242,242,.07);
+  --accent:#F2F2F2; --accent-ink:#111111;
 }
 
-:root[data-palette="sunset"]{
-  --bg:#FBEAE1; --ink:#3A1C12; --muted:#8A5C47; --line:rgba(58,28,18,.14);
-  --face:#5A2518; --rim:rgba(255,241,232,.18); --field:rgba(58,28,18,.06);
-  --accent:#FF6B4A; --accent-ink:#fff;
+:root[data-palette="nuit"]{
+  --bg:#D9DEF2; --ink:#1B1F3B; --muted:#565C85; --line:rgba(27,31,59,.16);
+  --face:#11132B; --face-ink:#E7E9FF; --rim:rgba(231,233,255,.2);
+  --needle:#E7E3FF; --z2:#C9CEDC; --z3:#8E9ADB; --z4:#5865E0;
+  --accent:#5865E0; --accent-ink:#fff; --field:rgba(27,31,59,.07);
 }
 @media (prefers-color-scheme:dark){
-  :root[data-palette="sunset"]:not([data-theme="light"]){
-    --bg:#241009; --ink:#FCEADD; --muted:#C08F76; --line:rgba(252,234,221,.14);
-    --face:#4A2014; --rim:rgba(255,241,232,.16); --field:rgba(252,234,221,.07);
+  :root[data-palette="nuit"]:not([data-theme="light"]){
+    --bg:#06070F; --ink:#E7E9FF; --muted:#7D84B0; --line:rgba(231,233,255,.14);
+    --face:#0B0D22; --rim:rgba(231,233,255,.16); --field:rgba(231,233,255,.07);
   }
 }
-:root[data-palette="sunset"][data-theme="dark"]{
-  --bg:#241009; --ink:#FCEADD; --muted:#C08F76; --line:rgba(252,234,221,.14);
-  --face:#4A2014; --rim:rgba(255,241,232,.16); --field:rgba(252,234,221,.07);
+:root[data-palette="nuit"][data-theme="dark"]{
+  --bg:#06070F; --ink:#E7E9FF; --muted:#7D84B0; --line:rgba(231,233,255,.14);
+  --face:#0B0D22; --rim:rgba(231,233,255,.16); --field:rgba(231,233,255,.07);
 }
 
-:root[data-palette="prune"]{
-  --bg:#F1E6FB; --ink:#2A1540; --muted:#705D8C; --line:rgba(42,21,64,.14);
-  --face:#3A1C5C; --rim:rgba(246,238,255,.18); --field:rgba(42,21,64,.06);
-  --accent:#9B5DE5; --accent-ink:#fff;
+:root[data-palette="ciel"]{
+  --bg:#E7F3FF; --ink:#0B3550; --muted:#4F7791; --line:rgba(11,53,80,.14);
+  --face:#1E6FA8; --face-ink:#F0FAFF; --rim:rgba(240,250,255,.2);
+  --needle:#FFFDF2; --z2:#FFD166; --z3:#FF9F59; --z4:#F25C8A;
+  --accent:#2FA7E0; --accent-ink:#fff; --field:rgba(11,53,80,.06);
 }
 @media (prefers-color-scheme:dark){
-  :root[data-palette="prune"]:not([data-theme="light"]){
-    --bg:#170B29; --ink:#F0E5FB; --muted:#A68FC4; --line:rgba(240,229,251,.14);
-    --face:#311A52; --rim:rgba(246,238,255,.16); --field:rgba(240,229,251,.07);
+  :root[data-palette="ciel"]:not([data-theme="light"]){
+    --bg:#061826; --ink:#DCF0FF; --muted:#6E96AD; --line:rgba(220,240,255,.14);
+    --face:#0D3E5C; --rim:rgba(220,240,255,.16); --field:rgba(220,240,255,.07);
   }
 }
-:root[data-palette="prune"][data-theme="dark"]{
-  --bg:#170B29; --ink:#F0E5FB; --muted:#A68FC4; --line:rgba(240,229,251,.14);
-  --face:#311A52; --rim:rgba(246,238,255,.16); --field:rgba(240,229,251,.07);
+:root[data-palette="ciel"][data-theme="dark"]{
+  --bg:#061826; --ink:#DCF0FF; --muted:#6E96AD; --line:rgba(220,240,255,.14);
+  --face:#0D3E5C; --rim:rgba(220,240,255,.16); --field:rgba(220,240,255,.07);
 }
 
 *,*::before,*::after{box-sizing:inherit}
@@ -192,16 +198,13 @@ h2{font-size:15px;font-weight:600;color:var(--muted);margin:40px 0 0}
 .palette summary::-webkit-details-marker{display:none}
 .palette[open] summary{background:var(--accent)}
 .palette .swatches{position:absolute;right:0;top:calc(100% + 8px);z-index:5;display:flex;gap:10px;padding:10px 12px;border-radius:16px;background:var(--bg);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.14)}
-.palette.inline summary{background:none;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:16px;padding:6px 2px;border-radius:0}
-.palette.inline summary:hover{color:var(--ink)}
-.palette.inline .swatches{position:static;margin-top:10px;padding:0;border:0;box-shadow:none;background:none}
-.swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:var(--dot);padding:0;cursor:pointer;flex:none}
+.swatch{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--dot);padding:0;cursor:pointer;flex:none}
 .swatch:hover{transform:scale(1.1)}
-:root[data-palette="lavande"] .swatch[data-palette-key="lavande"],
-:root[data-palette="ocean"] .swatch[data-palette-key="ocean"],
-:root[data-palette="foret"] .swatch[data-palette-key="foret"],
-:root[data-palette="sunset"] .swatch[data-palette-key="sunset"],
-:root[data-palette="prune"] .swatch[data-palette-key="prune"]{border-color:var(--ink)}
+:root[data-palette="basique"] .swatch[data-palette-key="basique"],
+:root[data-palette="pastel"] .swatch[data-palette-key="pastel"],
+:root[data-palette="noirblanc"] .swatch[data-palette-key="noirblanc"],
+:root[data-palette="nuit"] .swatch[data-palette-key="nuit"],
+:root[data-palette="ciel"] .swatch[data-palette-key="ciel"]{border-color:var(--ink);border-width:3px}
 
 .wedgeRot{transform-box:view-box;transform-origin:200px 214px}
 @media (prefers-reduced-motion:no-preference){
@@ -261,11 +264,11 @@ const SPECTRES = {
 };
 const COLORS = ["#F25C8A","#5B6CFF","#2BB59A","#FF9F59","#9B5DE5","#E0A800","#00A6D6","#D9534F"];
 const PALETTES = [
-  { key: "lavande", name: "Lavande", dot: "#F25C8A" },
-  { key: "ocean", name: "Océan", dot: "#0EA5C4" },
-  { key: "foret", name: "Forêt", dot: "#2FA84F" },
-  { key: "sunset", name: "Coucher de soleil", dot: "#FF6B4A" },
-  { key: "prune", name: "Prune", dot: "#9B5DE5" }
+  { key: "basique", name: "Basique", dot: "#4C6FFF" },
+  { key: "pastel", name: "Pastel", dot: "#FF8FB3" },
+  { key: "noirblanc", name: "Noir et blanc", dot: "linear-gradient(135deg,#111 50%,#fff 50%)" },
+  { key: "nuit", name: "Nuit", dot: "#5865E0" },
+  { key: "ciel", name: "Ciel", dot: "#2FA7E0" }
 ];
 const LANGS = ["fr", "en"];
 const I18N = {
@@ -276,7 +279,7 @@ const I18N = {
     invitedIn: "On t'invite dans la partie",
     ownGame: "Ou créer ma propre partie",
     peerFail: "Le module de connexion n'a pas pu se charger. Recharge la page.",
-    themeBtn: "🎨 Changer de thème", themeTitle: "Changer de thème",
+    themeTitle: "Changer de thème",
     langTitle: "Changer de langue",
     leave: "Quitter",
     leaveConfirm: "Si tu quittes, la partie s'arrête pour tout le monde. Quitter ?",
@@ -324,7 +327,7 @@ const I18N = {
     invitedIn: "You're invited to the game",
     ownGame: "Or create my own game",
     peerFail: "The connection module couldn't load. Reload the page.",
-    themeBtn: "🎨 Change theme", themeTitle: "Change theme",
+    themeTitle: "Change theme",
     langTitle: "Change language",
     leave: "Leave",
     leaveConfirm: "If you leave, the game ends for everyone. Leave?",
@@ -445,6 +448,36 @@ function dialSVG() {
   </svg>`;
 }
 const scoreOf = (t, gv) => { const d = Math.abs(t - gv); return d <= 2.5 ? 4 : d <= 7.5 ? 3 : d <= 12.5 ? 2 : 0; };
+
+/* ---------- spin sound (matches the .wedgeRot.spin CSS duration) ---------- */
+const SPIN_S = 1.15;
+let actx = null;
+document.addEventListener("pointerdown", () => {
+  if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch {} }
+  if (actx && actx.state === "suspended") actx.resume().catch(() => {});
+}, { once: true });
+function playSpinSound() {
+  if (!actx || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  try {
+    const now = actx.currentTime, dur = SPIN_S;
+    const buffer = actx.createBuffer(1, Math.ceil(actx.sampleRate * dur), actx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const noise = actx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = actx.createBiquadFilter();
+    filter.type = "bandpass"; filter.Q.value = 9;
+    filter.frequency.setValueAtTime(950, now);
+    filter.frequency.exponentialRampToValueAtTime(160, now + dur);
+    const gain = actx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(.22, now + .08);
+    gain.gain.setValueAtTime(.22, now + dur - .25);
+    gain.gain.linearRampToValueAtTime(0, now + dur);
+    noise.connect(filter).connect(gain).connect(actx.destination);
+    noise.start(now); noise.stop(now + dur + .05);
+  } catch {}
+}
 
 /* ---------- game rules (run by the host) ---------- */
 const freshGame = () => ({ phase: "lobby", round: 0, order: [], psychic: null, left: "", right: "", target: null, clue: "", guess: null, pts: null, score: 0, played: 0 });
@@ -629,10 +662,7 @@ function renderHome() {
     ${invite ? `<div class="actions"><button class="link" id="own">${t("ownGame")}</button></div>` : ""}
     ${typeof Peer === "undefined" ? `<div class="note err" style="margin-top:20px">${t("peerFail")}</div>` : ""}
     <div class="actions" style="margin-top:28px">
-      <details class="palette inline">
-        <summary>${t("themeBtn")}</summary>
-        <div class="swatches">${paletteSwatchesHTML()}</div>
-      </details>
+      <details class="palette"><summary title="${esc(t("themeTitle"))}">🎨</summary><div class="swatches">${paletteSwatchesHTML()}</div></details>
       ${langSwitchHTML("inline")}
     </div>
   `;
@@ -708,6 +738,7 @@ function drawDial() {
   const spunKey = `${g.round}:${g.target}`;
   if (showWedge && amPsy && g.phase === "clue" && S.spunKey !== spunKey) {
     S.spunKey = spunKey;
+    playSpinSound();
     rot.classList.remove("spin");
     rot.style.transform = `rotate(${(targetDeg - 1080).toFixed(2)}deg)`;
     void rot.getBBox();
