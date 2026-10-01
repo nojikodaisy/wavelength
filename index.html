@@ -460,22 +460,64 @@ function playSpinSound() {
   if (!actx || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
     const now = actx.currentTime, dur = SPIN_S;
-    const buffer = actx.createBuffer(1, Math.ceil(actx.sampleRate * dur), actx.sampleRate);
+    const master = actx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(.3, now + .05);
+    master.gain.setValueAtTime(.3, now + dur - .2);
+    master.gain.linearRampToValueAtTime(0, now + dur);
+    master.connect(actx.destination);
+
+    // buzzy "zzzz" core: square wave, pitch falls as the wheel slows down
+    const buzz = actx.createOscillator();
+    buzz.type = "square";
+    buzz.frequency.setValueAtTime(180, now);
+    buzz.frequency.exponentialRampToValueAtTime(65, now + dur);
+    const buzzGain = actx.createGain();
+    buzzGain.gain.value = .5;
+    buzz.connect(buzzGain).connect(master);
+
+    // tremolo modulating the buzz's volume -> rough, rattling texture
+    const trem = actx.createOscillator();
+    trem.type = "square";
+    trem.frequency.setValueAtTime(55, now);
+    trem.frequency.exponentialRampToValueAtTime(12, now + dur);
+    const tremDepth = actx.createGain();
+    tremDepth.gain.value = .5;
+    trem.connect(tremDepth).connect(buzzGain.gain);
+
+    // constant crackle texture running for the whole spin
+    const bufLen = Math.ceil(actx.sampleRate * dur);
+    const buffer = actx.createBuffer(1, bufLen, actx.sampleRate);
     const data = buffer.getChannelData(0);
-    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-    const noise = actx.createBufferSource();
-    noise.buffer = buffer;
-    const filter = actx.createBiquadFilter();
-    filter.type = "bandpass"; filter.Q.value = 9;
-    filter.frequency.setValueAtTime(950, now);
-    filter.frequency.exponentialRampToValueAtTime(160, now + dur);
+    for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+    const crackle = actx.createBufferSource();
+    crackle.buffer = buffer;
+    const crackleFilter = actx.createBiquadFilter();
+    crackleFilter.type = "highpass"; crackleFilter.frequency.value = 2200;
+    const crackleGain = actx.createGain();
+    crackleGain.gain.value = .35;
+    crackle.connect(crackleFilter).connect(crackleGain).connect(master);
+
+    buzz.start(now); buzz.stop(now + dur + .05);
+    trem.start(now); trem.stop(now + dur + .05);
+    crackle.start(now); crackle.stop(now + dur + .05);
+  } catch {}
+}
+let lastTickAt = 0;
+function playTick() {
+  if (!actx || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const now = actx.currentTime;
+  if (now - lastTickAt < .07) return;
+  lastTickAt = now;
+  try {
+    const osc = actx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(650 + Math.random() * 150, now);
     const gain = actx.createGain();
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(.22, now + .08);
-    gain.gain.setValueAtTime(.22, now + dur - .25);
-    gain.gain.linearRampToValueAtTime(0, now + dur);
-    noise.connect(filter).connect(gain).connect(actx.destination);
-    noise.start(now); noise.stop(now + dur + .05);
+    gain.gain.setValueAtTime(.16, now);
+    gain.gain.exponentialRampToValueAtTime(.001, now + .05);
+    osc.connect(gain).connect(actx.destination);
+    osc.start(now); osc.stop(now + .06);
   } catch {}
 }
 
@@ -723,10 +765,15 @@ function bindDrag() {
   });
 }
 
+let lastTickVal = null;
 function drawDial() {
   const g = S.g; if (!g || !$("#dial")) return;
   const amPsy = g.psychic === S.pid;
   const v = g.phase === "reveal" ? g.guess : g.phase === "guess" ? S.dial : 50;
+  if (g.phase === "guess") {
+    if (lastTickVal !== null && lastTickVal !== v) playTick();
+    lastTickVal = v;
+  } else lastTickVal = null;
   const needle = $("#needle");
   needle.style.transform = `rotate(${((v - 50) * 1.8).toFixed(2)}deg)`;
   needle.classList.toggle("live", S.dragging);
