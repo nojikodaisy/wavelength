@@ -461,46 +461,39 @@ function playSpinSound() {
   try {
     const now = actx.currentTime, dur = SPIN_S;
     const master = actx.createGain();
-    master.gain.setValueAtTime(0, now);
-    master.gain.linearRampToValueAtTime(.3, now + .05);
-    master.gain.setValueAtTime(.3, now + dur - .2);
-    master.gain.linearRampToValueAtTime(0, now + dur);
+    master.gain.value = .16;
     master.connect(actx.destination);
 
-    // buzzy "zzzz" core: square wave, pitch falls as the wheel slows down
-    const buzz = actx.createOscillator();
-    buzz.type = "square";
-    buzz.frequency.setValueAtTime(180, now);
-    buzz.frequency.exponentialRampToValueAtTime(65, now + dur);
-    const buzzGain = actx.createGain();
-    buzzGain.gain.value = .5;
-    buzz.connect(buzzGain).connect(master);
+    // shared short burst used for every click's attack
+    const clickBuf = actx.createBuffer(1, Math.ceil(actx.sampleRate * .015), actx.sampleRate);
+    const clickData = clickBuf.getChannelData(0);
+    for (let i = 0; i < clickData.length; i++) clickData[i] = (Math.random() * 2 - 1) * (1 - i / clickData.length);
 
-    // tremolo modulating the buzz's volume -> rough, rattling texture
-    const trem = actx.createOscillator();
-    trem.type = "square";
-    trem.frequency.setValueAtTime(55, now);
-    trem.frequency.exponentialRampToValueAtTime(12, now + dur);
-    const tremDepth = actx.createGain();
-    tremDepth.gain.value = .5;
-    trem.connect(tremDepth).connect(buzzGain.gain);
+    // a decelerating train of low, round clicks - like a wheel's ratchet slowing to a stop
+    let t = 0, interval = .032;
+    while (t < dur) {
+      const when = now + t;
+      const click = actx.createBufferSource();
+      click.buffer = clickBuf;
+      const clickFilter = actx.createBiquadFilter();
+      clickFilter.type = "lowpass"; clickFilter.frequency.value = 850;
+      const clickGain = actx.createGain();
+      clickGain.gain.value = .5;
+      click.connect(clickFilter).connect(clickGain).connect(master);
+      click.start(when); click.stop(when + .02);
 
-    // constant crackle texture running for the whole spin
-    const bufLen = Math.ceil(actx.sampleRate * dur);
-    const buffer = actx.createBuffer(1, bufLen, actx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
-    const crackle = actx.createBufferSource();
-    crackle.buffer = buffer;
-    const crackleFilter = actx.createBiquadFilter();
-    crackleFilter.type = "highpass"; crackleFilter.frequency.value = 2200;
-    const crackleGain = actx.createGain();
-    crackleGain.gain.value = .35;
-    crackle.connect(crackleFilter).connect(crackleGain).connect(master);
+      const thump = actx.createOscillator();
+      thump.type = "sine";
+      thump.frequency.value = 95;
+      const thumpGain = actx.createGain();
+      thumpGain.gain.setValueAtTime(.6, when);
+      thumpGain.gain.exponentialRampToValueAtTime(.001, when + .07);
+      thump.connect(thumpGain).connect(master);
+      thump.start(when); thump.stop(when + .08);
 
-    buzz.start(now); buzz.stop(now + dur + .05);
-    trem.start(now); trem.stop(now + dur + .05);
-    crackle.start(now); crackle.stop(now + dur + .05);
+      t += interval;
+      interval *= 1.045;
+    }
   } catch {}
 }
 let lastTickAt = 0;
@@ -511,13 +504,13 @@ function playTick() {
   lastTickAt = now;
   try {
     const osc = actx.createOscillator();
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(650 + Math.random() * 150, now);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(190 + Math.random() * 60, now);
     const gain = actx.createGain();
-    gain.gain.setValueAtTime(.16, now);
-    gain.gain.exponentialRampToValueAtTime(.001, now + .05);
+    gain.gain.setValueAtTime(.1, now);
+    gain.gain.exponentialRampToValueAtTime(.001, now + .08);
     osc.connect(gain).connect(actx.destination);
-    osc.start(now); osc.stop(now + .06);
+    osc.start(now); osc.stop(now + .09);
   } catch {}
 }
 
