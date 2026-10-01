@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wavelength</title>
+<script>try{document.documentElement.setAttribute("data-palette",localStorage.getItem("wl-palette")||"lavande");}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&display=swap" rel="stylesheet">
@@ -30,6 +31,72 @@
   --face:#232766; --rim:rgba(243,240,255,.16); --field:rgba(241,238,255,.07);
   color-scheme:dark;
 }
+
+/* palettes alternatives (choix du joueur, local a son ecran) */
+:root[data-palette="ocean"]{
+  --bg:#E4F3FB; --ink:#0C2233; --muted:#4E7389; --line:rgba(12,34,51,.14);
+  --face:#0F3A52; --rim:rgba(234,248,255,.18); --field:rgba(12,34,51,.06);
+  --accent:#0EA5C4; --accent-ink:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="ocean"]:not([data-theme="light"]){
+    --bg:#081B26; --ink:#E8F6FC; --muted:#7FA8BA; --line:rgba(232,246,252,.14);
+    --face:#0D3347; --rim:rgba(234,248,255,.16); --field:rgba(232,246,252,.07);
+  }
+}
+:root[data-palette="ocean"][data-theme="dark"]{
+  --bg:#081B26; --ink:#E8F6FC; --muted:#7FA8BA; --line:rgba(232,246,252,.14);
+  --face:#0D3347; --rim:rgba(234,248,255,.16); --field:rgba(232,246,252,.07);
+}
+
+:root[data-palette="foret"]{
+  --bg:#E8F3E6; --ink:#16321C; --muted:#577A5D; --line:rgba(22,50,28,.14);
+  --face:#1C4A27; --rim:rgba(239,251,234,.18); --field:rgba(22,50,28,.06);
+  --accent:#2FA84F; --accent-ink:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="foret"]:not([data-theme="light"]){
+    --bg:#0E2113; --ink:#E9F7E6; --muted:#86AC8B; --line:rgba(233,247,230,.14);
+    --face:#1E3F23; --rim:rgba(239,251,234,.16); --field:rgba(233,247,230,.07);
+  }
+}
+:root[data-palette="foret"][data-theme="dark"]{
+  --bg:#0E2113; --ink:#E9F7E6; --muted:#86AC8B; --line:rgba(233,247,230,.14);
+  --face:#1E3F23; --rim:rgba(239,251,234,.16); --field:rgba(233,247,230,.07);
+}
+
+:root[data-palette="sunset"]{
+  --bg:#FBEAE1; --ink:#3A1C12; --muted:#8A5C47; --line:rgba(58,28,18,.14);
+  --face:#5A2518; --rim:rgba(255,241,232,.18); --field:rgba(58,28,18,.06);
+  --accent:#FF6B4A; --accent-ink:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="sunset"]:not([data-theme="light"]){
+    --bg:#241009; --ink:#FCEADD; --muted:#C08F76; --line:rgba(252,234,221,.14);
+    --face:#4A2014; --rim:rgba(255,241,232,.16); --field:rgba(252,234,221,.07);
+  }
+}
+:root[data-palette="sunset"][data-theme="dark"]{
+  --bg:#241009; --ink:#FCEADD; --muted:#C08F76; --line:rgba(252,234,221,.14);
+  --face:#4A2014; --rim:rgba(255,241,232,.16); --field:rgba(252,234,221,.07);
+}
+
+:root[data-palette="prune"]{
+  --bg:#F1E6FB; --ink:#2A1540; --muted:#705D8C; --line:rgba(42,21,64,.14);
+  --face:#3A1C5C; --rim:rgba(246,238,255,.18); --field:rgba(42,21,64,.06);
+  --accent:#9B5DE5; --accent-ink:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="prune"]:not([data-theme="light"]){
+    --bg:#170B29; --ink:#F0E5FB; --muted:#A68FC4; --line:rgba(240,229,251,.14);
+    --face:#311A52; --rim:rgba(246,238,255,.16); --field:rgba(240,229,251,.07);
+  }
+}
+:root[data-palette="prune"][data-theme="dark"]{
+  --bg:#170B29; --ink:#F0E5FB; --muted:#A68FC4; --line:rgba(240,229,251,.14);
+  --face:#311A52; --rim:rgba(246,238,255,.16); --field:rgba(240,229,251,.07);
+}
+
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{margin:0;min-height:100%}
@@ -62,7 +129,7 @@ button,input{font:inherit;color:inherit}
 .players li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;border-radius:999px;border:1px solid var(--line);font-size:15px}
 .players li .dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;background:var(--c)}
 .players li.psy{border-color:var(--accent)}
-.players li.psy::after{content:"médium";font-size:12px;color:var(--accent);font-weight:600}
+.players li .tag{font-size:12px;color:var(--accent);font-weight:600}
 .players li.me{font-weight:600}
 
 /* stage */
@@ -118,6 +185,34 @@ h2{font-size:15px;font-weight:600;color:var(--muted);margin:40px 0 0}
 .share{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 4px}
 .share input{flex:1;min-width:200px;border:0;border-radius:12px;background:var(--field);padding:12px 14px;font-size:15px;color:var(--ink)}
 .err{color:var(--accent);font-weight:600}
+
+/* selecteur de palette */
+.palette{position:relative}
+.palette summary{list-style:none;cursor:pointer;font-size:18px;line-height:1;padding:8px;border-radius:999px;background:var(--field)}
+.palette summary::-webkit-details-marker{display:none}
+.palette[open] summary{background:var(--accent)}
+.palette .swatches{position:absolute;right:0;top:calc(100% + 8px);z-index:5;display:flex;gap:10px;padding:10px 12px;border-radius:16px;background:var(--bg);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.palette.inline summary{background:none;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:16px;padding:6px 2px;border-radius:0}
+.palette.inline summary:hover{color:var(--ink)}
+.palette.inline .swatches{position:static;margin-top:10px;padding:0;border:0;box-shadow:none;background:none}
+.swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:var(--dot);padding:0;cursor:pointer;flex:none}
+.swatch:hover{transform:scale(1.1)}
+:root[data-palette="lavande"] .swatch[data-palette-key="lavande"],
+:root[data-palette="ocean"] .swatch[data-palette-key="ocean"],
+:root[data-palette="foret"] .swatch[data-palette-key="foret"],
+:root[data-palette="sunset"] .swatch[data-palette-key="sunset"],
+:root[data-palette="prune"] .swatch[data-palette-key="prune"]{border-color:var(--ink)}
+
+.wedgeRot{transform-box:view-box;transform-origin:200px 214px}
+@media (prefers-reduced-motion:no-preference){
+  .wedgeRot.spin{transition:transform 1.15s cubic-bezier(.22,.9,.26,1)}
+}
+
+/* selecteur de langue */
+.langsw{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--field)}
+.langsw button{border:0;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:700;cursor:pointer;background:none;color:var(--muted)}
+.langsw button.active{background:var(--accent);color:var(--accent-ink)}
+.langsw.inline{margin-left:10px}
 </style>
 </head>
 <body>
@@ -128,6 +223,7 @@ h2{font-size:15px;font-weight:600;color:var(--muted);margin:40px 0 0}
 (() => {
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
 const store = {
@@ -139,19 +235,137 @@ const rid = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => "abc
 const PREFIX = "wavelength-fr-";
 const CODE_RE = /^wl-[a-z0-9]{4,8}$/;
 
-const SPECTRES = [
-  ["Froid","Chaud"],["Nul","Génial"],["Sous-coté","Surcoté"],["Inutile","Indispensable"],
-  ["Facile à dessiner","Impossible à dessiner"],["Ça pue","Ça sent divinement bon"],["Ringard","Stylé"],
-  ["Triste","Joyeux"],["Banal","Bizarre"],["Pour les enfants","Pour les adultes"],["Mou","Dur"],
-  ["Calme","Bruyant"],["Vieux","Moderne"],["Héros","Méchant"],["Sans danger","Dangereux"],
-  ["Rare","Partout"],["Sain","Malsain"],["Fragile","Indestructible"],["Moche","Magnifique"],
-  ["Ennuyeux","Fascinant"],["Cliché","Original"],["Petit plaisir","Grand luxe"],["Légal","Illégal"],
-  ["Mauvaise idée","Excellente idée"],["Personne ne connaît","Tout le monde connaît"],
-  ["Ça se mange","Ça ne se mange pas"],["Peu romantique","Très romantique"],
-  ["Lundi matin","Vendredi soir"],["Arnaque","Bon plan"],["Classe","Gênant"]
-];
+const SPECTRES = {
+  fr: [
+    ["Froid","Chaud"],["Nul","Génial"],["Sous-coté","Surcoté"],["Inutile","Indispensable"],
+    ["Facile à dessiner","Impossible à dessiner"],["Ça pue","Ça sent divinement bon"],["Ringard","Stylé"],
+    ["Triste","Joyeux"],["Banal","Bizarre"],["Pour les enfants","Pour les adultes"],["Mou","Dur"],
+    ["Calme","Bruyant"],["Vieux","Moderne"],["Héros","Méchant"],["Sans danger","Dangereux"],
+    ["Rare","Partout"],["Sain","Malsain"],["Fragile","Indestructible"],["Moche","Magnifique"],
+    ["Ennuyeux","Fascinant"],["Cliché","Original"],["Petit plaisir","Grand luxe"],["Légal","Illégal"],
+    ["Mauvaise idée","Excellente idée"],["Personne ne connaît","Tout le monde connaît"],
+    ["Ça se mange","Ça ne se mange pas"],["Peu romantique","Très romantique"],
+    ["Lundi matin","Vendredi soir"],["Arnaque","Bon plan"],["Classe","Gênant"]
+  ],
+  en: [
+    ["Cold","Hot"],["Terrible","Amazing"],["Underrated","Overrated"],["Useless","Essential"],
+    ["Easy to draw","Impossible to draw"],["Smells awful","Smells amazing"],["Lame","Stylish"],
+    ["Sad","Happy"],["Ordinary","Weird"],["For kids","For adults"],["Soft","Hard"],
+    ["Quiet","Loud"],["Old","Modern"],["Hero","Villain"],["Safe","Dangerous"],
+    ["Rare","Everywhere"],["Healthy","Unhealthy"],["Fragile","Indestructible"],["Ugly","Gorgeous"],
+    ["Boring","Fascinating"],["Cliché","Original"],["Small treat","Big luxury"],["Legal","Illegal"],
+    ["Bad idea","Great idea"],["Nobody knows it","Everybody knows it"],
+    ["Edible","Not edible"],["Not romantic","Very romantic"],
+    ["Monday morning","Friday night"],["Rip-off","Great deal"],["Classy","Awkward"]
+  ]
+};
 const COLORS = ["#F25C8A","#5B6CFF","#2BB59A","#FF9F59","#9B5DE5","#E0A800","#00A6D6","#D9534F"];
-const VERDICT = {4:"Pile dessus.",3:"Presque.",2:"Pas loin.",0:"Raté."};
+const PALETTES = [
+  { key: "lavande", name: "Lavande", dot: "#F25C8A" },
+  { key: "ocean", name: "Océan", dot: "#0EA5C4" },
+  { key: "foret", name: "Forêt", dot: "#2FA84F" },
+  { key: "sunset", name: "Coucher de soleil", dot: "#FF6B4A" },
+  { key: "prune", name: "Prune", dot: "#9B5DE5" }
+];
+const LANGS = ["fr", "en"];
+const I18N = {
+  fr: {
+    lede: "Un indice, un cadran, et tout le groupe sur la même longueur d'onde.",
+    nick: "Ton pseudo", nickPh: "Ton prénom",
+    join: "Rejoindre la partie", create: "Créer une partie",
+    invitedIn: "On t'invite dans la partie",
+    ownGame: "Ou créer ma propre partie",
+    peerFail: "Le module de connexion n'a pas pu se charger. Recharge la page.",
+    themeBtn: "🎨 Changer de thème", themeTitle: "Changer de thème",
+    langTitle: "Changer de langue",
+    leave: "Quitter",
+    leaveConfirm: "Si tu quittes, la partie s'arrête pour tout le monde. Quitter ?",
+    left: "Gauche", right: "Droite",
+    medium: "médium", you: " (toi)", gone: " · parti",
+    score: n => `points en équipe, en ${n} manche${n > 1 ? "s" : ""}`,
+    connecting: "Connexion à la partie…",
+    shareSay: "Envoie ce lien à tes amis :", linkLabel: "Lien de la partie",
+    copyLink: "Copier le lien", copied: "Lien copié",
+    hostKeepOpen: "Garde cette page ouverte : c'est ton navigateur qui fait tourner la partie.",
+    waitSay: "Tu es dans la partie. On attend que tout le monde arrive.",
+    startGame: "Lancer la partie", needTwo: "Il faut au moins 2 joueurs.",
+    youAreMedium: "C'est toi le médium. Choisissez le spectre ensemble, tu le tapes.",
+    leftLabel: "À gauche", rightLabel: "À droite", leftPh: "Froid", rightPh: "Chaud",
+    validateTheme: "Valider le spectre", randomIdea: "Une idée au hasard",
+    psyIs: name => `<strong>${name}</strong> est le médium.`,
+    agreeSpectrum: name => `Mettez-vous d'accord sur les deux bouts du spectre, ${name} les tape.`,
+    clueSay: (l, r) => `La cible est dans la zone colorée. Trouve un indice qui la place entre <strong>${l}</strong> et <strong>${r}</strong>.`,
+    clueLabel: "Ton indice", cluePh: "Un mot, un objet, un film…", sendClue: "Envoyer l'indice",
+    backTheme: "Changer de spectre",
+    psySearching: name => `<strong>${name}</strong> cherche un indice…`,
+    noCheat: "Pas de triche, laissez-le réfléchir.",
+    psyWatch: "Pas un mot. Regarde-les chercher.",
+    turnTogether: "Tournez l'aiguille ensemble. Tout le monde voit la même.",
+    lockBtn: "Valider la position",
+    byYou: "Tu as bougé l'aiguille en dernier.",
+    byOther: name => `${name} a bougé l'aiguille en dernier.`,
+    byNoneSelf: "Personne n'a encore touché l'aiguille.",
+    byNoneOther: "Glisse l'aiguille sur le cadran, ou utilise les flèches du clavier.",
+    nextPsy: name => `Prochain médium : ${name}.`,
+    nextRound: "Manche suivante",
+    someone: "quelqu'un", defaultPlayer: "Joueur",
+    quoteOpen: "«", quoteClose: "»", dialAria: "Cadran",
+    errHostRecover: "Impossible de récupérer ta partie. Crée-en une nouvelle.",
+    errNetwork: "Connexion au serveur impossible. Vérifie ta connexion internet et réessaie.",
+    errNoResponse: "La partie ne répond pas. Vérifie le lien ou demande à l'hôte s'il a toujours la page ouverte.",
+    errNotFound: "Partie introuvable. L'hôte a peut-être fermé sa page : demande-lui un nouveau lien.",
+    errHostLeft: "L'hôte a quitté la partie. Elle est terminée.",
+    verdict: { 4: "Pile dessus.", 3: "Presque.", 2: "Pas loin.", 0: "Raté." }
+  },
+  en: {
+    lede: "One clue, one dial, and the whole group on the same wavelength.",
+    nick: "Your name", nickPh: "Your first name",
+    join: "Join the game", create: "Create a game",
+    invitedIn: "You're invited to the game",
+    ownGame: "Or create my own game",
+    peerFail: "The connection module couldn't load. Reload the page.",
+    themeBtn: "🎨 Change theme", themeTitle: "Change theme",
+    langTitle: "Change language",
+    leave: "Leave",
+    leaveConfirm: "If you leave, the game ends for everyone. Leave?",
+    left: "Left", right: "Right",
+    medium: "Psychic", you: " (you)", gone: " · left",
+    score: n => `team points over ${n} round${n > 1 ? "s" : ""}`,
+    connecting: "Connecting to the game…",
+    shareSay: "Send this link to your friends:", linkLabel: "Game link",
+    copyLink: "Copy link", copied: "Link copied",
+    hostKeepOpen: "Keep this page open: your browser is running the game.",
+    waitSay: "You're in the game. Waiting for everyone to join.",
+    startGame: "Start the game", needTwo: "You need at least 2 players.",
+    youAreMedium: "You're the Psychic. Agree on the spectrum together, you type it in.",
+    leftLabel: "Left side", rightLabel: "Right side", leftPh: "Cold", rightPh: "Hot",
+    validateTheme: "Set the spectrum", randomIdea: "Random idea",
+    psyIs: name => `<strong>${name}</strong> is the Psychic.`,
+    agreeSpectrum: name => `Agree on the two ends of the spectrum together, ${name} will type them in.`,
+    clueSay: (l, r) => `The target is in the colored zone. Find a clue that places it between <strong>${l}</strong> and <strong>${r}</strong>.`,
+    clueLabel: "Your clue", cluePh: "A word, an object, a movie…", sendClue: "Send the clue",
+    backTheme: "Change the spectrum",
+    psySearching: name => `<strong>${name}</strong> is thinking of a clue…`,
+    noCheat: "No cheating, let them think.",
+    psyWatch: "Not a word. Watch them figure it out.",
+    turnTogether: "Turn the needle together. Everyone sees the same one.",
+    lockBtn: "Lock in position",
+    byYou: "You moved the needle last.",
+    byOther: name => `${name} moved the needle last.`,
+    byNoneSelf: "No one has touched the needle yet.",
+    byNoneOther: "Drag the needle on the dial, or use the arrow keys.",
+    nextPsy: name => `Next psychic: ${name}.`,
+    nextRound: "Next round",
+    someone: "someone", defaultPlayer: "Player",
+    quoteOpen: "“", quoteClose: "”", dialAria: "Dial",
+    errHostRecover: "Couldn't recover your game. Create a new one.",
+    errNetwork: "Couldn't connect to the server. Check your internet connection and try again.",
+    errNoResponse: "The game isn't responding. Check the link or ask the host if their page is still open.",
+    errNotFound: "Game not found. The host may have closed their page: ask them for a new link.",
+    errHostLeft: "The host left the game. It's over.",
+    verdict: { 4: "Right on.", 3: "Close.", 2: "Not far.", 0: "Way off." }
+  }
+};
 
 const S = {
   peer: null, hostConn: null, isHost: false, code: null,
@@ -160,8 +374,37 @@ const S = {
   roster: new Map(),          // host only: pid -> {pid,name,online,joinedAt,conn}
   players: [],                // what everyone renders
   g: null, dial: 50, dialBy: null, dialRound: null, dragging: false,
-  view: "home", error: "", panelKey: "", revealedRound: -1, draftL: "", draftR: ""
+  view: "home", error: "", panelKey: "", revealedRound: -1, spunKey: "", draftL: "", draftR: "",
+  lang: (LANGS.includes(store.get("wl-lang")) ? store.get("wl-lang") : "fr")
 };
+function t(key, ...args) {
+  const v = I18N[S.lang][key];
+  return typeof v === "function" ? v(...args) : v;
+}
+function setPalette(key) {
+  document.documentElement.setAttribute("data-palette", key);
+  store.set("wl-palette", key);
+}
+function paletteSwatchesHTML() {
+  return PALETTES.map(p => `<button type="button" class="swatch" data-palette-key="${p.key}" style="--dot:${p.dot}" aria-label="${esc(p.name)}" title="${esc(p.name)}"></button>`).join("");
+}
+function bindPaletteSwatches(root) {
+  for (const b of $$(".swatch", root)) b.onclick = () => { setPalette(b.dataset.paletteKey); const d = b.closest("details"); if (d) d.open = false; };
+}
+function setLang(lang) {
+  S.lang = lang;
+  store.set("wl-lang", lang);
+  document.documentElement.lang = lang;
+  S.panelKey = "";
+  render();
+}
+function langSwitchHTML(cls = "") {
+  return `<span class="langsw ${cls}" title="${esc(t("langTitle"))}">${LANGS.map(l =>
+    `<button type="button" data-lang="${l}" class="${S.lang === l ? "active" : ""}">${l.toUpperCase()}</button>`).join("")}</span>`;
+}
+function bindLangSwitch(root) {
+  for (const b of $$(".langsw button", root)) b.onclick = () => setLang(b.dataset.lang);
+}
 const hashCode = () => { const h = location.hash.slice(1).toLowerCase(); return CODE_RE.test(h) ? h : null; };
 const shareLink = () => location.origin + location.pathname + location.search + "#" + S.code;
 
@@ -188,10 +431,10 @@ function dialSVG() {
   const bands = [[-12.5,-7.5,2],[-7.5,-2.5,3],[-2.5,2.5,4],[2.5,7.5,3],[7.5,12.5,2]];
   const wedge = bands.map(([a, b, p]) => `<path d="${sector(50 + a, 50 + b, R - 20)}" fill="var(--z${p})"/>`).join("") +
     bands.map(([a, b, p]) => { const [x, y] = pt(50 + (a + b) / 2, R - 42); return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="15" font-weight="800" fill="#1A1C43">${p}</text>`; }).join("");
-  return `<svg class="dial" id="dial" viewBox="0 0 400 240" role="img" aria-label="Cadran">
+  return `<svg class="dial" id="dial" viewBox="0 0 400 240" role="img" aria-label="${esc(t("dialAria"))}">
     <path d="${sector(0, 100, R + 10)}" fill="var(--face)"/>
     ${waves}
-    <g id="wedgeRot"><g id="wedgeIn" class="wedge-in">${wedge}</g></g>
+    <g id="wedgeRot" class="wedgeRot"><g id="wedgeIn" class="wedge-in">${wedge}</g></g>
     ${ticks}
     <g id="needle" class="needle">
       <line x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - R + 6}" stroke="var(--needle)" stroke-width="5" stroke-linecap="round"/>
@@ -268,7 +511,7 @@ function hostOnData(conn, d) {
     const prev = S.roster.get(d.pid);
     if (prev && prev.conn && prev.conn !== conn) { try { prev.conn.close(); } catch {} }
     conn._pid = d.pid;
-    S.roster.set(d.pid, { pid: d.pid, name: String(d.name || "Joueur").trim().slice(0, 24) || "Joueur", online: true, joinedAt: prev ? prev.joinedAt : Date.now(), conn });
+    S.roster.set(d.pid, { pid: d.pid, name: String(d.name || t("defaultPlayer")).trim().slice(0, 24) || t("defaultPlayer"), online: true, joinedAt: prev ? prev.joinedAt : Date.now(), conn });
     hostUpdate();
   } else if (!conn._pid) {
     return;
@@ -304,9 +547,9 @@ function startHost(code, saved, attempt = 0) {
       peer.destroy();
       if (saved && attempt < 6) setTimeout(() => startHost(code, saved, attempt + 1), 2500);
       else if (!saved) startHost("wl-" + rid(5), null);
-      else fail("Impossible de récupérer ta partie. Crée-en une nouvelle.");
+      else fail(t("errHostRecover"));
     } else if (["network", "server-error", "socket-error", "socket-closed"].includes(err.type)) {
-      fail("Connexion au serveur impossible. Vérifie ta connexion internet et réessaie.");
+      fail(t("errNetwork"));
     }
   });
   peer.on("disconnected", () => { if (!peer.destroyed) peer.reconnect(); });
@@ -317,7 +560,7 @@ function startClient(code) {
   S.view = "connecting"; S.error = ""; render();
   const peer = new Peer({ debug: 0 });
   S.peer = peer;
-  const timer = setTimeout(() => { if (S.view === "connecting") fail("La partie ne répond pas. Vérifie le lien ou demande à l'hôte s'il a toujours la page ouverte."); }, 15000);
+  const timer = setTimeout(() => { if (S.view === "connecting") fail(t("errNoResponse")); }, 15000);
   peer.on("open", () => {
     const conn = peer.connect(PREFIX + code, { reliable: true });
     S.hostConn = conn;
@@ -331,11 +574,11 @@ function startClient(code) {
       if (!S.dragging) { S.dial = clamp(+d.dial || 50); S.dialBy = d.dialBy || null; }
       render();
     });
-    conn.on("close", () => { if (S.hostConn === conn && S.view === "game") fail("L'hôte a quitté la partie. Elle est terminée."); });
+    conn.on("close", () => { if (S.hostConn === conn && S.view === "game") fail(t("errHostLeft")); });
   });
   peer.on("error", err => {
-    if (err.type === "peer-unavailable") fail("Partie introuvable. L'hôte a peut-être fermé sa page : demande-lui un nouveau lien.");
-    else if (["network", "server-error", "socket-error"].includes(err.type)) fail("Connexion au serveur impossible. Vérifie ta connexion internet et réessaie.");
+    if (err.type === "peer-unavailable") fail(t("errNotFound"));
+    else if (["network", "server-error", "socket-error"].includes(err.type)) fail(t("errNetwork"));
   });
 }
 
@@ -365,26 +608,33 @@ function sendDial() {
 }
 
 /* ---------- rendering ---------- */
-const nameOf = pid => (S.players.find(p => p.pid === pid) || {}).name || "quelqu'un";
+const nameOf = pid => (S.players.find(p => p.pid === pid) || {}).name || t("someone");
 const colorOf = pid => COLORS[[...pid].reduce((s, c) => s + c.charCodeAt(0), 0) % COLORS.length];
 
 function readName() {
-  const n = $("#nick"); S.name = (n && n.value.trim().slice(0, 24)) || S.name || "Joueur";
+  const n = $("#nick"); S.name = (n && n.value.trim().slice(0, 24)) || S.name || t("defaultPlayer");
   store.set("wl-name", S.name);
 }
 function renderHome() {
   const invite = hashCode();
   $("#app").innerHTML = `
     ${mark("big")}
-    <p class="lede">Un indice, un cadran, et tout le groupe sur la même longueur d'onde.</p>
+    <p class="lede">${t("lede")}</p>
     ${S.error ? `<div class="note err">${esc(S.error)}</div>` : ""}
-    ${invite ? `<p class="say">On t'invite dans la partie <span class="code">${esc(invite)}</span></p>` : ""}
+    ${invite ? `<p class="say">${t("invitedIn")} <span class="code">${esc(invite)}</span></p>` : ""}
     <div class="row">
-      <div class="field"><label for="nick">Ton pseudo</label><input id="nick" maxlength="24" autocomplete="nickname" value="${esc(S.name)}" placeholder="Ton prénom"></div>
-      <button class="btn" id="go">${invite ? "Rejoindre la partie" : "Créer une partie"}</button>
+      <div class="field"><label for="nick">${t("nick")}</label><input id="nick" maxlength="24" autocomplete="nickname" value="${esc(S.name)}" placeholder="${esc(t("nickPh"))}"></div>
+      <button class="btn" id="go">${invite ? t("join") : t("create")}</button>
     </div>
-    ${invite ? `<div class="actions"><button class="link" id="own">Ou créer ma propre partie</button></div>` : ""}
-    ${typeof Peer === "undefined" ? `<div class="note err" style="margin-top:20px">Le module de connexion n'a pas pu se charger. Recharge la page.</div>` : ""}
+    ${invite ? `<div class="actions"><button class="link" id="own">${t("ownGame")}</button></div>` : ""}
+    ${typeof Peer === "undefined" ? `<div class="note err" style="margin-top:20px">${t("peerFail")}</div>` : ""}
+    <div class="actions" style="margin-top:28px">
+      <details class="palette inline">
+        <summary>${t("themeBtn")}</summary>
+        <div class="swatches">${paletteSwatchesHTML()}</div>
+      </details>
+      ${langSwitchHTML("inline")}
+    </div>
   `;
   const go = () => {
     readName();
@@ -394,12 +644,17 @@ function renderHome() {
   $("#go").onclick = go;
   $("#nick").onkeydown = e => { if (e.key === "Enter") go(); };
   if ($("#own")) $("#own").onclick = () => { readName(); history.replaceState(null, "", location.pathname + location.search); startHost("wl-" + rid(5), null); };
+  bindPaletteSwatches($("#app"));
+  bindLangSwitch($("#app"));
 }
 
 function ensureGameShell() {
   if ($("#dial")) return;
   $("#app").innerHTML = `
-    <div class="top">${mark("small")}<span class="grow"></span><span class="code" id="code"></span><button class="link" id="leave">Quitter</button></div>
+    <div class="top">${mark("small")}<span class="grow"></span>
+      ${langSwitchHTML()}
+      <details class="palette" id="paletteBtn"><summary title="${esc(t("themeTitle"))}">🎨</summary><div class="swatches">${paletteSwatchesHTML()}</div></details>
+      <span class="code" id="code"></span><button class="link" id="leave">${t("leave")}</button></div>
     <ul class="players" id="players"></ul>
     <section class="stage">${dialSVG()}
       <div class="ends"><div id="endL"></div><div id="endR"></div></div>
@@ -407,7 +662,9 @@ function ensureGameShell() {
     </section>
     <section class="panel" id="panel" aria-live="polite"></section>
     <div class="score" id="score"></div>`;
-  $("#leave").onclick = () => { if (!S.isHost || confirm("Si tu quittes, la partie s'arrête pour tout le monde. Quitter ?")) leave(); };
+  $("#leave").onclick = () => { if (!S.isHost || confirm(t("leaveConfirm"))) leave(); };
+  bindPaletteSwatches($("#paletteBtn"));
+  bindLangSwitch($("#app"));
   bindDrag();
 }
 
@@ -447,7 +704,19 @@ function drawDial() {
   $("#dial").classList.toggle("grab", canDrag());
   const showWedge = g.target != null && (g.phase === "reveal" || (amPsy && ["clue", "guess"].includes(g.phase)));
   const rot = $("#wedgeRot"), win = $("#wedgeIn");
-  rot.setAttribute("transform", `rotate(${(((g.target ?? 50) - 50) * 1.8).toFixed(2)} ${CX} ${CY})`);
+  const targetDeg = ((g.target ?? 50) - 50) * 1.8;
+  const spunKey = `${g.round}:${g.target}`;
+  if (showWedge && amPsy && g.phase === "clue" && S.spunKey !== spunKey) {
+    S.spunKey = spunKey;
+    rot.classList.remove("spin");
+    rot.style.transform = `rotate(${(targetDeg - 1080).toFixed(2)}deg)`;
+    void rot.getBBox();
+    rot.classList.add("spin");
+    requestAnimationFrame(() => requestAnimationFrame(() => { rot.style.transform = `rotate(${targetDeg.toFixed(2)}deg)`; }));
+    rot.addEventListener("transitionend", () => rot.classList.remove("spin"), { once: true });
+  } else if (!rot.classList.contains("spin")) {
+    rot.style.transform = `rotate(${targetDeg.toFixed(2)}deg)`;
+  }
   rot.style.display = showWedge ? "" : "none";
   rot.style.opacity = amPsy && g.phase === "guess" ? .45 : 1;
   if (g.phase === "reveal" && S.revealedRound !== g.round) {
@@ -459,19 +728,23 @@ function renderGame() {
   ensureGameShell();
   const g = S.g, ps = S.players;
   $("#code").textContent = S.code;
+  $("#leave").textContent = t("leave");
+  $("#dial").setAttribute("aria-label", t("dialAria"));
+  const paletteSummary = $("#paletteBtn summary"); if (paletteSummary) paletteSummary.title = t("themeTitle");
+  for (const b of $$(".top .langsw button")) b.classList.toggle("active", b.dataset.lang === S.lang);
   $("#players").innerHTML = ps.map(p => `<li class="${p.pid === g.psychic ? "psy" : ""} ${p.pid === S.pid ? "me" : ""}" style="${p.online ? "" : "opacity:.4"}">
-      <span class="dot" style="--c:${colorOf(p.pid)}">${esc((p.name[0] || "?").toUpperCase())}</span>${esc(p.name)}${p.pid === S.pid ? " (toi)" : ""}${p.online ? "" : " · parti"}</li>`).join("");
+      <span class="dot" style="--c:${colorOf(p.pid)}">${esc((p.name[0] || "?").toUpperCase())}</span>${esc(p.name)}${p.pid === S.pid ? esc(t("you")) : ""}${p.online ? "" : esc(t("gone"))}${p.pid === g.psychic ? `<span class="tag">${esc(t("medium"))}</span>` : ""}</li>`).join("");
   const amPsy = g.psychic === S.pid, psyName = nameOf(g.psychic);
   const typingTheme = g.phase === "theme" && amPsy;
   const L = typingTheme ? S.draftL : g.left, Rr = typingTheme ? S.draftR : g.right;
-  $("#endL").innerHTML = L ? esc(L) : `<span class="ghost">Gauche</span>`;
-  $("#endR").innerHTML = Rr ? esc(Rr) : `<span class="ghost">Droite</span>`;
-  $("#clue").innerHTML = g.clue ? `<span class="q">«</span> ${esc(g.clue)} <span class="q">»</span>` : "";
-  $("#score").innerHTML = g.played ? `<b>${g.score}</b> points en équipe, en ${g.played} manche${g.played > 1 ? "s" : ""}` : "";
+  $("#endL").innerHTML = L ? esc(L) : `<span class="ghost">${esc(t("left"))}</span>`;
+  $("#endR").innerHTML = Rr ? esc(Rr) : `<span class="ghost">${esc(t("right"))}</span>`;
+  $("#clue").innerHTML = g.clue ? `<span class="q">${t("quoteOpen")}</span> ${esc(g.clue)} <span class="q">${t("quoteClose")}</span>` : "";
+  $("#score").innerHTML = g.played ? `<b>${g.score}</b> ${t("score", g.played)}` : "";
   drawDial();
 
   const online = ps.filter(p => p.online).length;
-  const key = [g.phase, g.round, g.psychic, amPsy, online >= 2].join("|");
+  const key = [g.phase, g.round, g.psychic, amPsy, online >= 2, S.lang].join("|");
   const panel = $("#panel");
   if (key === S.panelKey) { updateLive(); return; }
   S.panelKey = key;
@@ -479,70 +752,70 @@ function renderGame() {
   if (g.phase === "lobby") {
     const enough = online >= 2;
     panel.innerHTML = `
-      ${S.isHost ? `<p class="say">Envoie ce lien à tes amis :</p>
-      <div class="share"><input id="link" readonly value="${esc(shareLink())}" aria-label="Lien de la partie"><button class="btn quiet" id="copy">Copier le lien</button></div>
-      <p class="muted">Garde cette page ouverte : c'est ton navigateur qui fait tourner la partie.</p>`
-      : `<p class="say">Tu es dans la partie. On attend que tout le monde arrive.</p>`}
-      <div class="actions"><button class="btn" id="start" ${enough ? "" : "disabled"}>Lancer la partie</button>
-      ${enough ? "" : `<span class="muted">Il faut au moins 2 joueurs.</span>`}</div>`;
+      ${S.isHost ? `<p class="say">${t("shareSay")}</p>
+      <div class="share"><input id="link" readonly value="${esc(shareLink())}" aria-label="${esc(t("linkLabel"))}"><button class="btn quiet" id="copy">${t("copyLink")}</button></div>
+      <p class="muted">${t("hostKeepOpen")}</p>`
+      : `<p class="say">${t("waitSay")}</p>`}
+      <div class="actions"><button class="btn" id="start" ${enough ? "" : "disabled"}>${t("startGame")}</button>
+      ${enough ? "" : `<span class="muted">${t("needTwo")}</span>`}</div>`;
     $("#start").onclick = () => act("start");
     if ($("#copy")) $("#copy").onclick = async () => {
       const b = $("#copy");
       try { await navigator.clipboard.writeText(shareLink()); } catch { $("#link").select(); document.execCommand && document.execCommand("copy"); }
-      b.textContent = "Lien copié"; setTimeout(() => { if (b.isConnected) b.textContent = "Copier le lien"; }, 1800);
+      b.textContent = t("copied"); setTimeout(() => { if (b.isConnected) b.textContent = t("copyLink"); }, 1800);
     };
   } else if (g.phase === "theme") {
     if (amPsy) {
       panel.innerHTML = `
-        <p class="say">C'est toi le médium. Choisissez le spectre ensemble, tu le tapes.</p>
+        <p class="say">${t("youAreMedium")}</p>
         <div class="row">
-          <div class="field"><label for="inL">À gauche</label><input id="inL" maxlength="40" value="${esc(S.draftL)}" placeholder="Froid"></div>
-          <div class="field"><label for="inR">À droite</label><input id="inR" maxlength="40" value="${esc(S.draftR)}" placeholder="Chaud"></div>
+          <div class="field"><label for="inL">${t("leftLabel")}</label><input id="inL" maxlength="40" value="${esc(S.draftL)}" placeholder="${esc(t("leftPh"))}"></div>
+          <div class="field"><label for="inR">${t("rightLabel")}</label><input id="inR" maxlength="40" value="${esc(S.draftR)}" placeholder="${esc(t("rightPh"))}"></div>
         </div>
-        <div class="actions"><button class="btn" id="okTheme">Valider le spectre</button><button class="btn quiet" id="rnd">Une idée au hasard</button></div>`;
+        <div class="actions"><button class="btn" id="okTheme">${t("validateTheme")}</button><button class="btn quiet" id="rnd">${t("randomIdea")}</button></div>`;
       const sync = () => { S.draftL = $("#inL").value; S.draftR = $("#inR").value;
-        $("#endL").innerHTML = S.draftL ? esc(S.draftL) : `<span class="ghost">Gauche</span>`;
-        $("#endR").innerHTML = S.draftR ? esc(S.draftR) : `<span class="ghost">Droite</span>`;
+        $("#endL").innerHTML = S.draftL ? esc(S.draftL) : `<span class="ghost">${esc(t("left"))}</span>`;
+        $("#endR").innerHTML = S.draftR ? esc(S.draftR) : `<span class="ghost">${esc(t("right"))}</span>`;
         $("#okTheme").disabled = !(S.draftL.trim() && S.draftR.trim()); };
       $("#inL").oninput = sync; $("#inR").oninput = sync;
-      $("#rnd").onclick = () => { const [a, b] = SPECTRES[Math.floor(Math.random() * SPECTRES.length)]; $("#inL").value = a; $("#inR").value = b; sync(); };
+      $("#rnd").onclick = () => { const list = SPECTRES[S.lang]; const [a, b] = list[Math.floor(Math.random() * list.length)]; $("#inL").value = a; $("#inR").value = b; sync(); };
       $("#okTheme").onclick = () => act("theme", { round: g.round, left: S.draftL, right: S.draftR });
       sync(); $("#inL").focus();
     } else {
-      panel.innerHTML = `<p class="say"><strong>${esc(psyName)}</strong> est le médium.</p>
-        <p class="muted">Mettez-vous d'accord sur les deux bouts du spectre, ${esc(psyName)} les tape.</p>`;
+      panel.innerHTML = `<p class="say">${t("psyIs", esc(psyName))}</p>
+        <p class="muted">${t("agreeSpectrum", esc(psyName))}</p>`;
     }
   } else if (g.phase === "clue") {
     if (amPsy) {
       panel.innerHTML = `
-        <p class="say">La cible est dans la zone colorée. Trouve un indice qui la place entre <strong>${esc(g.left)}</strong> et <strong>${esc(g.right)}</strong>.</p>
-        <div class="row"><div class="field"><label for="inClue">Ton indice</label><input id="inClue" maxlength="80" placeholder="Un mot, un objet, un film…"></div>
-        <button class="btn" id="okClue" disabled>Envoyer l'indice</button></div>
-        <div class="actions"><button class="link" id="back">Changer de spectre</button></div>`;
+        <p class="say">${t("clueSay", esc(g.left), esc(g.right))}</p>
+        <div class="row"><div class="field"><label for="inClue">${t("clueLabel")}</label><input id="inClue" maxlength="80" placeholder="${esc(t("cluePh"))}"></div>
+        <button class="btn" id="okClue" disabled>${t("sendClue")}</button></div>
+        <div class="actions"><button class="link" id="back">${t("backTheme")}</button></div>`;
       $("#inClue").oninput = e => $("#okClue").disabled = !e.target.value.trim();
       $("#inClue").onkeydown = e => { if (e.key === "Enter" && e.target.value.trim()) $("#okClue").click(); };
       $("#okClue").onclick = () => act("clue", { round: g.round, clue: $("#inClue").value });
       $("#back").onclick = () => { S.draftL = g.left; S.draftR = g.right; act("back", { round: g.round }); };
       $("#inClue").focus();
     } else {
-      panel.innerHTML = `<p class="say"><strong>${esc(psyName)}</strong> cherche un indice…</p><p class="muted">Pas de triche, laissez-le réfléchir.</p>`;
+      panel.innerHTML = `<p class="say">${t("psySearching", esc(psyName))}</p><p class="muted">${t("noCheat")}</p>`;
     }
   } else if (g.phase === "guess") {
     if (amPsy) {
-      panel.innerHTML = `<p class="say">Pas un mot. Regarde-les chercher.</p><p class="muted" id="by"></p>`;
+      panel.innerHTML = `<p class="say">${t("psyWatch")}</p><p class="muted" id="by"></p>`;
     } else {
-      panel.innerHTML = `<p class="say">Tournez l'aiguille ensemble. Tout le monde voit la même.</p>
+      panel.innerHTML = `<p class="say">${t("turnTogether")}</p>
         <p class="muted" id="by"></p>
-        <div class="actions"><button class="btn" id="lock">Valider la position</button></div>`;
+        <div class="actions"><button class="btn" id="lock">${t("lockBtn")}</button></div>`;
       $("#lock").onclick = () => act("lock", { round: g.round });
     }
     updateLive();
   } else if (g.phase === "reveal") {
     const next = nameOf(nextPsychic(g, new Set(ps.filter(p => p.online).map(p => p.pid)), g.psychic));
     panel.innerHTML = `
-      <div class="verdict"><b>+${g.pts}</b><span>${VERDICT[g.pts]}</span></div>
-      <p class="muted">Prochain médium : ${esc(next)}.</p>
-      <div class="actions"><button class="btn" id="next">Manche suivante</button></div>`;
+      <div class="verdict"><b>+${g.pts}</b><span>${t("verdict")[g.pts]}</span></div>
+      <p class="muted">${t("nextPsy", esc(next))}</p>
+      <div class="actions"><button class="btn" id="next">${t("nextRound")}</button></div>`;
     $("#next").onclick = () => act("next", { round: g.round });
     S.draftL = ""; S.draftR = "";
   }
@@ -550,17 +823,18 @@ function renderGame() {
 function updateLive() {
   const by = $("#by"); if (!by) return;
   by.textContent = S.dialBy
-    ? `${S.dialBy === S.name ? "Tu as" : S.dialBy + " a"} bougé l'aiguille en dernier.`
-    : (S.g && S.g.psychic === S.pid ? "Personne n'a encore touché l'aiguille." : "Glisse l'aiguille sur le cadran, ou utilise les flèches du clavier.");
+    ? (S.dialBy === S.name ? t("byYou") : t("byOther", S.dialBy))
+    : (S.g && S.g.psychic === S.pid ? t("byNoneSelf") : t("byNoneOther"));
 }
 
 function render() {
   if (S.view === "game" && S.g) return renderGame();
-  if (S.view === "connecting") { $("#app").innerHTML = `${mark("big")}<p class="lede">Connexion à la partie…</p>`; return; }
+  if (S.view === "connecting") { $("#app").innerHTML = `${mark("big")}<p class="lede">${t("connecting")}</p>`; return; }
   renderHome();
 }
 
 /* ---------- boot ---------- */
+document.documentElement.lang = S.lang;
 (() => {
   let saved = null;
   try { saved = JSON.parse(store.get("wl-host", true) || "null"); } catch {}
