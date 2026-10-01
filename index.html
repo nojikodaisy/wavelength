@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wavelength</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECEAFB; --ink:#1A1C43; --muted:#5E6192; --line:rgba(26,28,67,.14);
+  --face:#20235A; --face-ink:#F3F0FF; --rim:rgba(243,240,255,.18);
+  --needle:#FFF4E0; --z2:#FFD166; --z3:#FF9F59; --z4:#F25C8A;
+  --accent:#F25C8A; --accent-ink:#fff; --field:rgba(26,28,67,.06);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#13153A; --ink:#F1EEFF; --muted:#9B9DCC; --line:rgba(241,238,255,.14);
+    --face:#232766; --rim:rgba(243,240,255,.16); --field:rgba(241,238,255,.07);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13153A; --ink:#F1EEFF; --muted:#9B9DCC; --line:rgba(241,238,255,.14);
+  --face:#232766; --rim:rgba(243,240,255,.16); --field:rgba(241,238,255,.07);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Bricolage Grotesque",ui-rounded,"Avenir Next",system-ui,sans-serif;
+  font-size:17px; line-height:1.45; -webkit-font-smoothing:antialiased;
+}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:20px 20px 48px}
+
+/* wordmark: letters riding a wave */
+.mark{display:inline-flex;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:1}
+.mark span{display:inline-block;transform:translateY(var(--y))}
+.mark.big{font-size:clamp(52px,13vw,104px);margin:28px 0 8px}
+.mark.small{font-size:22px}
+@media (prefers-reduced-motion:no-preference){
+  .mark.big span{animation:ride 3.2s ease-in-out infinite;animation-delay:calc(var(--i)*-.32s)}
+  @keyframes ride{0%,100%{transform:translateY(calc(var(--a)*-1))}50%{transform:translateY(var(--a))}}
+}
+
+.lede{font-size:20px;color:var(--muted);max-width:30ch;margin:0 0 32px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top .grow{flex:1}
+.code{font-weight:700;font-stretch:85%;padding:4px 12px;border-radius:999px;background:var(--field)}
+.link{background:none;border:0;padding:6px 2px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--ink)}
+
+.players{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px;padding:0;list-style:none}
+.players li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;border-radius:999px;border:1px solid var(--line);font-size:15px}
+.players li .dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;background:var(--c)}
+.players li.psy{border-color:var(--accent)}
+.players li.psy::after{content:"médium";font-size:12px;color:var(--accent);font-weight:600}
+.players li.me{font-weight:600}
+
+/* stage */
+.stage{position:relative;margin-top:10px}
+svg.dial{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+svg.dial.grab{cursor:grab}
+svg.dial.grab:active{cursor:grabbing}
+.ends{display:flex;justify-content:space-between;gap:16px;margin-top:-4px}
+.ends div{font-weight:750;font-stretch:78%;font-size:clamp(24px,6vw,40px);line-height:1;max-width:46%;overflow-wrap:anywhere}
+.ends div:last-child{text-align:right}
+.ends .ghost{color:var(--muted);opacity:.45}
+.clue{text-align:center;font-size:clamp(26px,6vw,38px);font-weight:400;font-stretch:90%;margin:18px 0 4px;min-height:1.3em;overflow-wrap:anywhere}
+.clue .q{color:var(--accent)}
+
+.wedge-in{transform-box:view-box;transform-origin:200px 214px}
+.needle{transform-box:view-box;transform-origin:200px 214px;transition:transform .14s ease-out}
+.needle.live{transition:none}
+@media (prefers-reduced-motion:no-preference){
+  .wedge-in.pop{animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+}
+
+/* panel */
+.panel{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.panel p{margin:0 0 14px;max-width:56ch}
+.panel .say{font-size:20px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:150px}
+.field label{font-size:14px;color:var(--muted)}
+.field input{border:0;border-bottom:2px solid var(--line);background:transparent;padding:8px 2px;font-size:20px;outline:none;border-radius:0}
+.field input:focus{border-bottom-color:var(--accent)}
+.btn{border:0;border-radius:999px;padding:13px 24px;font-weight:650;cursor:pointer;background:var(--accent);color:var(--accent-ink);font-size:17px}
+.btn:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.btn.quiet{background:var(--field);color:var(--ink)}
+:focus-visible{outline:3px solid var(--z2);outline-offset:3px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+
+.games{list-style:none;padding:0;margin:8px 0 0}
+.games li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.games li .who{flex:1;color:var(--muted);font-size:15px}
+.games li strong{color:var(--ink);font-weight:650}
+h2{font-size:15px;font-weight:600;color:var(--muted);margin:40px 0 0}
+
+.verdict{display:flex;align-items:baseline;gap:14px;margin-bottom:10px}
+.verdict b{font-size:64px;font-weight:800;font-stretch:75%;line-height:1}
+.verdict span{font-size:22px}
+.score{margin-top:26px;color:var(--muted);font-size:15px}
+.score b{color:var(--ink);font-size:20px}
+.note{padding:12px 14px;border-radius:12px;background:var(--field);color:var(--muted);font-size:15px;margin-bottom:24px}
+
+.share{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 4px}
+.share input{flex:1;min-width:200px;border:0;border-radius:12px;background:var(--field);padding:12px 14px;font-size:15px;color:var(--ink)}
+.err{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
+const store = {
+  get(k, s) { try { return (s ? sessionStorage : localStorage).getItem(k); } catch { return null; } },
+  set(k, v, s) { try { (s ? sessionStorage : localStorage).setItem(k, v); } catch {} },
+  del(k, s) { try { (s ? sessionStorage : localStorage).removeItem(k); } catch {} }
+};
+const rid = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("");
+const PREFIX = "wavelength-fr-";
+const CODE_RE = /^wl-[a-z0-9]{4,8}$/;
+
+const SPECTRES = [
+  ["Froid","Chaud"],["Nul","Génial"],["Sous-coté","Surcoté"],["Inutile","Indispensable"],
+  ["Facile à dessiner","Impossible à dessiner"],["Ça pue","Ça sent divinement bon"],["Ringard","Stylé"],
+  ["Triste","Joyeux"],["Banal","Bizarre"],["Pour les enfants","Pour les adultes"],["Mou","Dur"],
+  ["Calme","Bruyant"],["Vieux","Moderne"],["Héros","Méchant"],["Sans danger","Dangereux"],
+  ["Rare","Partout"],["Sain","Malsain"],["Fragile","Indestructible"],["Moche","Magnifique"],
+  ["Ennuyeux","Fascinant"],["Cliché","Original"],["Petit plaisir","Grand luxe"],["Légal","Illégal"],
+  ["Mauvaise idée","Excellente idée"],["Personne ne connaît","Tout le monde connaît"],
+  ["Ça se mange","Ça ne se mange pas"],["Peu romantique","Très romantique"],
+  ["Lundi matin","Vendredi soir"],["Arnaque","Bon plan"],["Classe","Gênant"]
+];
+const COLORS = ["#F25C8A","#5B6CFF","#2BB59A","#FF9F59","#9B5DE5","#E0A800","#00A6D6","#D9534F"];
+const VERDICT = {4:"Pile dessus.",3:"Presque.",2:"Pas loin.",0:"Raté."};
+
+const S = {
+  peer: null, hostConn: null, isHost: false, code: null,
+  pid: store.get("wl-pid", true) || (() => { const p = rid(10); store.set("wl-pid", p, true); return p; })(),
+  name: store.get("wl-name") || "",
+  roster: new Map(),          // host only: pid -> {pid,name,online,joinedAt,conn}
+  players: [],                // what everyone renders
+  g: null, dial: 50, dialBy: null, dialRound: null, dragging: false,
+  view: "home", error: "", panelKey: "", revealedRound: -1, draftL: "", draftR: ""
+};
+const hashCode = () => { const h = location.hash.slice(1).toLowerCase(); return CODE_RE.test(h) ? h : null; };
+const shareLink = () => location.origin + location.pathname + location.search + "#" + S.code;
+
+/* ---------- wordmark ---------- */
+function mark(cls) {
+  return `<div class="mark ${cls}" aria-label="Wavelength">${[..."Wavelength"].map((ch, i) =>
+    `<span aria-hidden="true" style="--i:${i};--y:${(Math.sin(i * .78) * (cls === "big" ? 9 : 2.5)).toFixed(1)}px;--a:${cls === "big" ? 7 : 0}px">${ch}</span>`).join("")}</div>`;
+}
+
+/* ---------- dial ---------- */
+const CX = 200, CY = 214, R = 186;
+const pt = (v, r) => { const a = (180 - v * 1.8) * Math.PI / 180; return [CX + r * Math.cos(a), CY - r * Math.sin(a)]; };
+function sector(v1, v2, r) {
+  const [x1, y1] = pt(v1, r), [x2, y2] = pt(v2, r);
+  return `M${CX} ${CY} L${x1.toFixed(2)} ${y1.toFixed(2)} A${r} ${r} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+}
+function dialSVG() {
+  let ticks = "";
+  for (let v = 0; v <= 100; v += 2.5) {
+    const long = v % 25 === 0, [x1, y1] = pt(v, R - (long ? 16 : 8)), [x2, y2] = pt(v, R - 2);
+    ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="var(--face-ink)" stroke-opacity="${long ? .5 : .22}" stroke-width="${long ? 2 : 1.2}" stroke-linecap="round"/>`;
+  }
+  const waves = [52, 92, 132].map(r => `<path d="M${CX - r} ${CY} A${r} ${r} 0 0 1 ${CX + r} ${CY}" fill="none" stroke="var(--rim)" stroke-width="1.5" stroke-dasharray="${r === 92 ? "3 7" : "none"}"/>`).join("");
+  const bands = [[-12.5,-7.5,2],[-7.5,-2.5,3],[-2.5,2.5,4],[2.5,7.5,3],[7.5,12.5,2]];
+  const wedge = bands.map(([a, b, p]) => `<path d="${sector(50 + a, 50 + b, R - 20)}" fill="var(--z${p})"/>`).join("") +
+    bands.map(([a, b, p]) => { const [x, y] = pt(50 + (a + b) / 2, R - 42); return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="15" font-weight="800" fill="#1A1C43">${p}</text>`; }).join("");
+  return `<svg class="dial" id="dial" viewBox="0 0 400 240" role="img" aria-label="Cadran">
+    <path d="${sector(0, 100, R + 10)}" fill="var(--face)"/>
+    ${waves}
+    <g id="wedgeRot"><g id="wedgeIn" class="wedge-in">${wedge}</g></g>
+    ${ticks}
+    <g id="needle" class="needle">
+      <line x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - R + 6}" stroke="var(--needle)" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="${CX}" cy="${CY - R + 22}" r="9" fill="var(--needle)"/>
+    </g>
+    <circle cx="${CX}" cy="${CY}" r="20" fill="var(--needle)"/>
+    <circle cx="${CX}" cy="${CY}" r="7" fill="var(--face)"/>
+  </svg>`;
+}
+const scoreOf = (t, gv) => { const d = Math.abs(t - gv); return d <= 2.5 ? 4 : d <= 7.5 ? 3 : d <= 12.5 ? 2 : 0; };
+
+/* ---------- game rules (run by the host) ---------- */
+const freshGame = () => ({ phase: "lobby", round: 0, order: [], psychic: null, left: "", right: "", target: null, clue: "", guess: null, pts: null, score: 0, played: 0 });
+function nextPsychic(g, present, after) {
+  const order = g.order.filter(p => present.has(p));
+  if (!order.length) return null;
+  return order[(order.indexOf(after) + 1) % order.length];
+}
+function clearRound(g) { g.left = ""; g.right = ""; g.target = null; g.clue = ""; g.guess = null; g.pts = null; }
+function apply(g, pid, a, present) {
+  if (!a || typeof a !== "object") return;
+  const str = (s, n) => String(s ?? "").trim().slice(0, n);
+  switch (a.type) {
+    case "start":
+      if (g.phase === "lobby" && present.size >= 2) { g.round = 1; g.psychic = g.order.find(p => present.has(p)); clearRound(g); g.phase = "theme"; }
+      break;
+    case "theme":
+      if (g.phase === "theme" && pid === g.psychic && a.round === g.round && str(a.left, 40) && str(a.right, 40)) {
+        g.left = str(a.left, 40); g.right = str(a.right, 40);
+        g.target = Math.round((12.5 + Math.random() * 75) * 10) / 10; g.phase = "clue";
+      }
+      break;
+    case "back":
+      if (g.phase === "clue" && pid === g.psychic && a.round === g.round) { g.phase = "theme"; g.target = null; }
+      break;
+    case "clue":
+      if (g.phase === "clue" && pid === g.psychic && a.round === g.round && str(a.clue, 80)) { g.clue = str(a.clue, 80); g.phase = "guess"; }
+      break;
+    case "lock":
+      if (g.phase === "guess" && pid !== g.psychic && a.round === g.round) {
+        g.guess = Math.round(clamp(S.dial) * 10) / 10; g.pts = scoreOf(g.target, g.guess);
+        g.score += g.pts; g.played += 1; g.phase = "reveal";
+      }
+      break;
+    case "next":
+      if (g.phase === "reveal" && a.round === g.round) {
+        g.psychic = nextPsychic(g, present, g.psychic); g.round += 1; clearRound(g); g.phase = "theme";
+      }
+      break;
+  }
+}
+
+/* ---------- host ---------- */
+const present = () => new Set([...S.roster.values()].filter(p => p.online).map(p => p.pid));
+function hostUpdate() {
+  const g = S.g, pr = present();
+  for (const p of [...S.roster.values()].sort((a, b) => a.joinedAt - b.joinedAt)) if (!g.order.includes(p.pid)) g.order.push(p.pid);
+  if (["theme", "clue", "guess"].includes(g.phase) && !pr.has(g.psychic)) {
+    g.psychic = nextPsychic(g, pr, g.psychic); clearRound(g); g.phase = "theme";
+  }
+  if (g.round !== S.dialRound) { S.dialRound = g.round; S.dial = 50; S.dialBy = null; }
+  S.players = [...S.roster.values()].sort((a, b) => a.joinedAt - b.joinedAt).map(p => ({ pid: p.pid, name: p.name, online: p.online }));
+  broadcast();
+  store.set("wl-host", JSON.stringify({ code: S.code, g: S.g, roster: S.players }), true);
+  render();
+}
+function broadcast() {
+  const msg = { t: "state", g: S.g, players: S.players, dial: S.dial, dialBy: S.dialBy };
+  for (const p of S.roster.values()) if (p.online && p.conn && p.conn.open) { try { p.conn.send(msg); } catch {} }
+}
+function hostOnData(conn, d) {
+  if (!d || typeof d !== "object") return;
+  if (d.t === "hello" && typeof d.pid === "string" && d.pid.length <= 20) {
+    const prev = S.roster.get(d.pid);
+    if (prev && prev.conn && prev.conn !== conn) { try { prev.conn.close(); } catch {} }
+    conn._pid = d.pid;
+    S.roster.set(d.pid, { pid: d.pid, name: String(d.name || "Joueur").trim().slice(0, 24) || "Joueur", online: true, joinedAt: prev ? prev.joinedAt : Date.now(), conn });
+    hostUpdate();
+  } else if (!conn._pid) {
+    return;
+  } else if (d.t === "act") {
+    apply(S.g, conn._pid, d.a, present()); hostUpdate();
+  } else if (d.t === "dial" && typeof d.v === "number" && S.g.phase === "guess" && conn._pid !== S.g.psychic && d.r === S.g.round) {
+    S.dial = clamp(d.v); S.dialBy = (S.roster.get(conn._pid) || {}).name || null;
+    broadcast(); drawDial(); updateLive();
+  }
+}
+function startHost(code, saved, attempt = 0) {
+  S.view = "connecting"; S.error = ""; render();
+  const peer = new Peer(PREFIX + code, { debug: 0 });
+  S.peer = peer;
+  peer.on("open", () => {
+    S.isHost = true; S.code = code;
+    S.g = saved ? saved.g : freshGame();
+    S.roster = new Map();
+    if (saved) for (const p of saved.roster || []) S.roster.set(p.pid, { pid: p.pid, name: p.name, online: false, joinedAt: Date.now() });
+    S.roster.set(S.pid, { pid: S.pid, name: S.name, online: true, joinedAt: (S.roster.get(S.pid) || {}).joinedAt || Date.now() - 1e6 });
+    history.replaceState(null, "", "#" + code);
+    S.view = "game"; S.panelKey = ""; hostUpdate();
+  });
+  peer.on("connection", conn => {
+    conn.on("data", d => hostOnData(conn, d));
+    conn.on("close", () => {
+      const p = conn._pid && S.roster.get(conn._pid);
+      if (p && p.conn === conn) { p.online = false; p.conn = null; hostUpdate(); }
+    });
+  });
+  peer.on("error", err => {
+    if (err.type === "unavailable-id") {
+      peer.destroy();
+      if (saved && attempt < 6) setTimeout(() => startHost(code, saved, attempt + 1), 2500);
+      else if (!saved) startHost("wl-" + rid(5), null);
+      else fail("Impossible de récupérer ta partie. Crée-en une nouvelle.");
+    } else if (["network", "server-error", "socket-error", "socket-closed"].includes(err.type)) {
+      fail("Connexion au serveur impossible. Vérifie ta connexion internet et réessaie.");
+    }
+  });
+  peer.on("disconnected", () => { if (!peer.destroyed) peer.reconnect(); });
+}
+
+/* ---------- client ---------- */
+function startClient(code) {
+  S.view = "connecting"; S.error = ""; render();
+  const peer = new Peer({ debug: 0 });
+  S.peer = peer;
+  const timer = setTimeout(() => { if (S.view === "connecting") fail("La partie ne répond pas. Vérifie le lien ou demande à l'hôte s'il a toujours la page ouverte."); }, 15000);
+  peer.on("open", () => {
+    const conn = peer.connect(PREFIX + code, { reliable: true });
+    S.hostConn = conn;
+    conn.on("open", () => conn.send({ t: "hello", pid: S.pid, name: S.name }));
+    conn.on("data", d => {
+      if (!d || d.t !== "state" || !d.g) return;
+      clearTimeout(timer);
+      if (S.view !== "game") { S.view = "game"; S.code = code; S.panelKey = ""; }
+      S.g = d.g; S.players = Array.isArray(d.players) ? d.players : [];
+      if (S.g.round !== S.dialRound) { S.dialRound = S.g.round; S.dial = 50; S.dialBy = null; }
+      if (!S.dragging) { S.dial = clamp(+d.dial || 50); S.dialBy = d.dialBy || null; }
+      render();
+    });
+    conn.on("close", () => { if (S.hostConn === conn && S.view === "game") fail("L'hôte a quitté la partie. Elle est terminée."); });
+  });
+  peer.on("error", err => {
+    if (err.type === "peer-unavailable") fail("Partie introuvable. L'hôte a peut-être fermé sa page : demande-lui un nouveau lien.");
+    else if (["network", "server-error", "socket-error"].includes(err.type)) fail("Connexion au serveur impossible. Vérifie ta connexion internet et réessaie.");
+  });
+}
+
+function fail(msg) {
+  try { S.peer && S.peer.destroy(); } catch {}
+  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null;
+  S.view = "home"; S.error = msg; render();
+}
+function leave() {
+  try { S.peer && S.peer.destroy(); } catch {}
+  store.del("wl-host", true);
+  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null; S.code = null; S.error = "";
+  history.replaceState(null, "", location.pathname + location.search);
+  S.view = "home"; render();
+}
+function act(type, data = {}) {
+  const a = { type, ...data };
+  if (S.isHost) { apply(S.g, S.pid, a, present()); hostUpdate(); }
+  else if (S.hostConn && S.hostConn.open) S.hostConn.send({ t: "act", a });
+}
+let dialQueued = false;
+function sendDial() {
+  if (S.isHost) { broadcast(); return; }
+  if (dialQueued) return;
+  dialQueued = true;
+  requestAnimationFrame(() => { dialQueued = false; if (S.hostConn && S.hostConn.open) S.hostConn.send({ t: "dial", v: S.dial, r: S.g.round }); });
+}
+
+/* ---------- rendering ---------- */
+const nameOf = pid => (S.players.find(p => p.pid === pid) || {}).name || "quelqu'un";
+const colorOf = pid => COLORS[[...pid].reduce((s, c) => s + c.charCodeAt(0), 0) % COLORS.length];
+
+function readName() {
+  const n = $("#nick"); S.name = (n && n.value.trim().slice(0, 24)) || S.name || "Joueur";
+  store.set("wl-name", S.name);
+}
+function renderHome() {
+  const invite = hashCode();
+  $("#app").innerHTML = `
+    ${mark("big")}
+    <p class="lede">Un indice, un cadran, et tout le groupe sur la même longueur d'onde.</p>
+    ${S.error ? `<div class="note err">${esc(S.error)}</div>` : ""}
+    ${invite ? `<p class="say">On t'invite dans la partie <span class="code">${esc(invite)}</span></p>` : ""}
+    <div class="row">
+      <div class="field"><label for="nick">Ton pseudo</label><input id="nick" maxlength="24" autocomplete="nickname" value="${esc(S.name)}" placeholder="Ton prénom"></div>
+      <button class="btn" id="go">${invite ? "Rejoindre la partie" : "Créer une partie"}</button>
+    </div>
+    ${invite ? `<div class="actions"><button class="link" id="own">Ou créer ma propre partie</button></div>` : ""}
+    ${typeof Peer === "undefined" ? `<div class="note err" style="margin-top:20px">Le module de connexion n'a pas pu se charger. Recharge la page.</div>` : ""}
+  `;
+  const go = () => {
+    readName();
+    if (typeof Peer === "undefined") return;
+    if (invite) startClient(invite); else startHost("wl-" + rid(5), null);
+  };
+  $("#go").onclick = go;
+  $("#nick").onkeydown = e => { if (e.key === "Enter") go(); };
+  if ($("#own")) $("#own").onclick = () => { readName(); history.replaceState(null, "", location.pathname + location.search); startHost("wl-" + rid(5), null); };
+}
+
+function ensureGameShell() {
+  if ($("#dial")) return;
+  $("#app").innerHTML = `
+    <div class="top">${mark("small")}<span class="grow"></span><span class="code" id="code"></span><button class="link" id="leave">Quitter</button></div>
+    <ul class="players" id="players"></ul>
+    <section class="stage">${dialSVG()}
+      <div class="ends"><div id="endL"></div><div id="endR"></div></div>
+      <div class="clue" id="clue"></div>
+    </section>
+    <section class="panel" id="panel" aria-live="polite"></section>
+    <div class="score" id="score"></div>`;
+  $("#leave").onclick = () => { if (!S.isHost || confirm("Si tu quittes, la partie s'arrête pour tout le monde. Quitter ?")) leave(); };
+  bindDrag();
+}
+
+function canDrag() { return S.g && S.g.phase === "guess" && S.g.psychic !== S.pid; }
+function bindDrag() {
+  const svg = $("#dial");
+  const valueAt = e => {
+    const r = svg.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width * 400, y = (e.clientY - r.top) / r.height * 240;
+    let a = Math.atan2(CY - y, x - CX) * 180 / Math.PI;
+    if (a < 0) a = x < CX ? 180 : 0;
+    return clamp((180 - a) / 1.8);
+  };
+  const set = v => { S.dial = Math.round(v * 10) / 10; S.dialBy = S.name; sendDial(); drawDial(); updateLive(); };
+  svg.addEventListener("pointerdown", e => { if (!canDrag()) return; S.dragging = true; svg.setPointerCapture(e.pointerId); set(valueAt(e)); });
+  svg.addEventListener("pointermove", e => { if (S.dragging) set(valueAt(e)); });
+  const end = () => { S.dragging = false; drawDial(); };
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", end);
+  svg.setAttribute("tabindex", "0");
+  svg.addEventListener("keydown", e => {
+    if (!canDrag() || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+    e.preventDefault();
+    const step = e.shiftKey ? 5 : 1;
+    set(clamp(S.dial + (e.key === "ArrowLeft" ? -step : step)));
+  });
+}
+
+function drawDial() {
+  const g = S.g; if (!g || !$("#dial")) return;
+  const amPsy = g.psychic === S.pid;
+  const v = g.phase === "reveal" ? g.guess : g.phase === "guess" ? S.dial : 50;
+  const needle = $("#needle");
+  needle.style.transform = `rotate(${((v - 50) * 1.8).toFixed(2)}deg)`;
+  needle.classList.toggle("live", S.dragging);
+  needle.style.opacity = ["guess", "reveal"].includes(g.phase) ? 1 : .35;
+  $("#dial").classList.toggle("grab", canDrag());
+  const showWedge = g.target != null && (g.phase === "reveal" || (amPsy && ["clue", "guess"].includes(g.phase)));
+  const rot = $("#wedgeRot"), win = $("#wedgeIn");
+  rot.setAttribute("transform", `rotate(${(((g.target ?? 50) - 50) * 1.8).toFixed(2)} ${CX} ${CY})`);
+  rot.style.display = showWedge ? "" : "none";
+  rot.style.opacity = amPsy && g.phase === "guess" ? .45 : 1;
+  if (g.phase === "reveal" && S.revealedRound !== g.round) {
+    S.revealedRound = g.round; win.classList.remove("pop"); void win.getBBox(); win.classList.add("pop");
+  } else if (g.phase !== "reveal") win.classList.remove("pop");
+}
+
+function renderGame() {
+  ensureGameShell();
+  const g = S.g, ps = S.players;
+  $("#code").textContent = S.code;
+  $("#players").innerHTML = ps.map(p => `<li class="${p.pid === g.psychic ? "psy" : ""} ${p.pid === S.pid ? "me" : ""}" style="${p.online ? "" : "opacity:.4"}">
+      <span class="dot" style="--c:${colorOf(p.pid)}">${esc((p.name[0] || "?").toUpperCase())}</span>${esc(p.name)}${p.pid === S.pid ? " (toi)" : ""}${p.online ? "" : " · parti"}</li>`).join("");
+  const amPsy = g.psychic === S.pid, psyName = nameOf(g.psychic);
+  const typingTheme = g.phase === "theme" && amPsy;
+  const L = typingTheme ? S.draftL : g.left, Rr = typingTheme ? S.draftR : g.right;
+  $("#endL").innerHTML = L ? esc(L) : `<span class="ghost">Gauche</span>`;
+  $("#endR").innerHTML = Rr ? esc(Rr) : `<span class="ghost">Droite</span>`;
+  $("#clue").innerHTML = g.clue ? `<span class="q">«</span> ${esc(g.clue)} <span class="q">»</span>` : "";
+  $("#score").innerHTML = g.played ? `<b>${g.score}</b> points en équipe, en ${g.played} manche${g.played > 1 ? "s" : ""}` : "";
+  drawDial();
+
+  const online = ps.filter(p => p.online).length;
+  const key = [g.phase, g.round, g.psychic, amPsy, online >= 2].join("|");
+  const panel = $("#panel");
+  if (key === S.panelKey) { updateLive(); return; }
+  S.panelKey = key;
+
+  if (g.phase === "lobby") {
+    const enough = online >= 2;
+    panel.innerHTML = `
+      ${S.isHost ? `<p class="say">Envoie ce lien à tes amis :</p>
+      <div class="share"><input id="link" readonly value="${esc(shareLink())}" aria-label="Lien de la partie"><button class="btn quiet" id="copy">Copier le lien</button></div>
+      <p class="muted">Garde cette page ouverte : c'est ton navigateur qui fait tourner la partie.</p>`
+      : `<p class="say">Tu es dans la partie. On attend que tout le monde arrive.</p>`}
+      <div class="actions"><button class="btn" id="start" ${enough ? "" : "disabled"}>Lancer la partie</button>
+      ${enough ? "" : `<span class="muted">Il faut au moins 2 joueurs.</span>`}</div>`;
+    $("#start").onclick = () => act("start");
+    if ($("#copy")) $("#copy").onclick = async () => {
+      const b = $("#copy");
+      try { await navigator.clipboard.writeText(shareLink()); } catch { $("#link").select(); document.execCommand && document.execCommand("copy"); }
+      b.textContent = "Lien copié"; setTimeout(() => { if (b.isConnected) b.textContent = "Copier le lien"; }, 1800);
+    };
+  } else if (g.phase === "theme") {
+    if (amPsy) {
+      panel.innerHTML = `
+        <p class="say">C'est toi le médium. Choisissez le spectre ensemble, tu le tapes.</p>
+        <div class="row">
+          <div class="field"><label for="inL">À gauche</label><input id="inL" maxlength="40" value="${esc(S.draftL)}" placeholder="Froid"></div>
+          <div class="field"><label for="inR">À droite</label><input id="inR" maxlength="40" value="${esc(S.draftR)}" placeholder="Chaud"></div>
+        </div>
+        <div class="actions"><button class="btn" id="okTheme">Valider le spectre</button><button class="btn quiet" id="rnd">Une idée au hasard</button></div>`;
+      const sync = () => { S.draftL = $("#inL").value; S.draftR = $("#inR").value;
+        $("#endL").innerHTML = S.draftL ? esc(S.draftL) : `<span class="ghost">Gauche</span>`;
+        $("#endR").innerHTML = S.draftR ? esc(S.draftR) : `<span class="ghost">Droite</span>`;
+        $("#okTheme").disabled = !(S.draftL.trim() && S.draftR.trim()); };
+      $("#inL").oninput = sync; $("#inR").oninput = sync;
+      $("#rnd").onclick = () => { const [a, b] = SPECTRES[Math.floor(Math.random() * SPECTRES.length)]; $("#inL").value = a; $("#inR").value = b; sync(); };
+      $("#okTheme").onclick = () => act("theme", { round: g.round, left: S.draftL, right: S.draftR });
+      sync(); $("#inL").focus();
+    } else {
+      panel.innerHTML = `<p class="say"><strong>${esc(psyName)}</strong> est le médium.</p>
+        <p class="muted">Mettez-vous d'accord sur les deux bouts du spectre, ${esc(psyName)} les tape.</p>`;
+    }
+  } else if (g.phase === "clue") {
+    if (amPsy) {
+      panel.innerHTML = `
+        <p class="say">La cible est dans la zone colorée. Trouve un indice qui la place entre <strong>${esc(g.left)}</strong> et <strong>${esc(g.right)}</strong>.</p>
+        <div class="row"><div class="field"><label for="inClue">Ton indice</label><input id="inClue" maxlength="80" placeholder="Un mot, un objet, un film…"></div>
+        <button class="btn" id="okClue" disabled>Envoyer l'indice</button></div>
+        <div class="actions"><button class="link" id="back">Changer de spectre</button></div>`;
+      $("#inClue").oninput = e => $("#okClue").disabled = !e.target.value.trim();
+      $("#inClue").onkeydown = e => { if (e.key === "Enter" && e.target.value.trim()) $("#okClue").click(); };
+      $("#okClue").onclick = () => act("clue", { round: g.round, clue: $("#inClue").value });
+      $("#back").onclick = () => { S.draftL = g.left; S.draftR = g.right; act("back", { round: g.round }); };
+      $("#inClue").focus();
+    } else {
+      panel.innerHTML = `<p class="say"><strong>${esc(psyName)}</strong> cherche un indice…</p><p class="muted">Pas de triche, laissez-le réfléchir.</p>`;
+    }
+  } else if (g.phase === "guess") {
+    if (amPsy) {
+      panel.innerHTML = `<p class="say">Pas un mot. Regarde-les chercher.</p><p class="muted" id="by"></p>`;
+    } else {
+      panel.innerHTML = `<p class="say">Tournez l'aiguille ensemble. Tout le monde voit la même.</p>
+        <p class="muted" id="by"></p>
+        <div class="actions"><button class="btn" id="lock">Valider la position</button></div>`;
+      $("#lock").onclick = () => act("lock", { round: g.round });
+    }
+    updateLive();
+  } else if (g.phase === "reveal") {
+    const next = nameOf(nextPsychic(g, new Set(ps.filter(p => p.online).map(p => p.pid)), g.psychic));
+    panel.innerHTML = `
+      <div class="verdict"><b>+${g.pts}</b><span>${VERDICT[g.pts]}</span></div>
+      <p class="muted">Prochain médium : ${esc(next)}.</p>
+      <div class="actions"><button class="btn" id="next">Manche suivante</button></div>`;
+    $("#next").onclick = () => act("next", { round: g.round });
+    S.draftL = ""; S.draftR = "";
+  }
+}
+function updateLive() {
+  const by = $("#by"); if (!by) return;
+  by.textContent = S.dialBy
+    ? `${S.dialBy === S.name ? "Tu as" : S.dialBy + " a"} bougé l'aiguille en dernier.`
+    : (S.g && S.g.psychic === S.pid ? "Personne n'a encore touché l'aiguille." : "Glisse l'aiguille sur le cadran, ou utilise les flèches du clavier.");
+}
+
+function render() {
+  if (S.view === "game" && S.g) return renderGame();
+  if (S.view === "connecting") { $("#app").innerHTML = `${mark("big")}<p class="lede">Connexion à la partie…</p>`; return; }
+  renderHome();
+}
+
+/* ---------- boot ---------- */
+(() => {
+  let saved = null;
+  try { saved = JSON.parse(store.get("wl-host", true) || "null"); } catch {}
+  const h = hashCode();
+  if (saved && h && saved.code === h && saved.g && typeof Peer !== "undefined") startHost(h, saved);
+  else render();
+})();
+window.addEventListener("hashchange", () => { if (S.view === "home") render(); });
+})();
+</script>
+</body>
+</html>
