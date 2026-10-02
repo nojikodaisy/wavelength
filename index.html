@@ -517,6 +517,7 @@ function playTick() {
 }
 
 /* ---------- phase sounds ---------- */
+const PHASE_VOL = .45; // overall loudness of the clue/score sounds
 function tone(freq, at, dur, { type = "sine", vol = .2, to = null } = {}) {
   const osc = actx.createOscillator();
   osc.type = type;
@@ -524,7 +525,7 @@ function tone(freq, at, dur, { type = "sine", vol = .2, to = null } = {}) {
   if (to) osc.frequency.exponentialRampToValueAtTime(to, at + dur);
   const gain = actx.createGain();
   gain.gain.setValueAtTime(.0001, at);
-  gain.gain.exponentialRampToValueAtTime(vol, at + .015);
+  gain.gain.exponentialRampToValueAtTime(vol * PHASE_VOL, at + .015);
   gain.gain.exponentialRampToValueAtTime(.0001, at + dur);
   osc.connect(gain).connect(actx.destination);
   osc.start(at); osc.stop(at + dur + .02);
@@ -943,7 +944,7 @@ function renderGame() {
       <p class="muted">${t("nextPsy", esc(next))}</p>
       <div class="actions"><button class="btn" id="next">${t("nextRound")}</button></div>`;
     $("#next").onclick = () => act("next", { round: g.round });
-    S.draftL = ""; S.draftR = "";
+    S.draftL = g.left; S.draftR = g.right; // next psychic starts from the same spectrum
   }
 }
 function updateLive() {
