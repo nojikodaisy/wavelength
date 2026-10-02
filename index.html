@@ -140,7 +140,9 @@ button,input{font:inherit;color:inherit}
 
 /* stage */
 .stage{position:relative;margin-top:10px}
-svg.dial{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+svg.dial{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;outline:none}
+svg.dial:focus,svg.dial:focus-visible{outline:none}
+.stage{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 svg.dial.grab{cursor:grab}
 svg.dial.grab:active{cursor:grabbing}
 .ends{display:flex;justify-content:space-between;gap:16px;margin-top:-4px}
@@ -514,6 +516,58 @@ function playTick() {
   } catch {}
 }
 
+/* ---------- phase sounds ---------- */
+function tone(freq, at, dur, { type = "sine", vol = .2, to = null } = {}) {
+  const osc = actx.createOscillator();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, at);
+  if (to) osc.frequency.exponentialRampToValueAtTime(to, at + dur);
+  const gain = actx.createGain();
+  gain.gain.setValueAtTime(.0001, at);
+  gain.gain.exponentialRampToValueAtTime(vol, at + .015);
+  gain.gain.exponentialRampToValueAtTime(.0001, at + dur);
+  osc.connect(gain).connect(actx.destination);
+  osc.start(at); osc.stop(at + dur + .02);
+}
+// the clue is in: a bright two-note "ding-dong" so guessers know to grab the needle
+function playClueSound() {
+  if (!actx) return;
+  try {
+    const now = actx.currentTime;
+    tone(784, now, .35, { type: "triangle", vol: .22 });
+    tone(1175, now + .14, .5, { type: "triangle", vol: .2 });
+  } catch {}
+}
+// one sound per score: 0 = sad trombone, 2 = single note, 3 = two-note rise, 4 = fanfare + sparkle
+function playScoreSound(pts) {
+  if (!actx) return;
+  try {
+    const now = actx.currentTime;
+    if (pts === 4) {
+      [523, 659, 784, 1047].forEach((f, i) => tone(f, now + i * .09, .45, { type: "triangle", vol: .2 }));
+      [2093, 2637, 3136].forEach((f, i) => tone(f, now + .4 + i * .06, .25, { vol: .06 }));
+    } else if (pts === 3) {
+      tone(523, now, .3, { type: "triangle", vol: .2 });
+      tone(784, now + .12, .45, { type: "triangle", vol: .2 });
+    } else if (pts === 2) {
+      tone(587, now, .4, { type: "triangle", vol: .2 });
+    } else {
+      tone(330, now, .3, { type: "sawtooth", vol: .07, to: 311 });
+      tone(294, now + .3, .55, { type: "sawtooth", vol: .07, to: 233 });
+    }
+  } catch {}
+}
+let soundKey = null;
+function phaseSounds(g) {
+  const key = `${g.round}:${g.phase}`;
+  if (key === soundKey) return;
+  const first = soundKey === null;
+  soundKey = key;
+  if (first) return;
+  if (g.phase === "guess") playClueSound();
+  else if (g.phase === "reveal") playScoreSound(g.pts);
+}
+
 /* ---------- game rules (run by the host) ---------- */
 const freshGame = () => ({ phase: "lobby", round: 0, order: [], psychic: null, left: "", right: "", target: null, clue: "", guess: null, pts: null, score: 0, played: 0 });
 function nextPsychic(g, present, after) {
@@ -744,7 +798,7 @@ function bindDrag() {
     return clamp((180 - a) / 1.8);
   };
   const set = v => { S.dial = Math.round(v * 10) / 10; S.dialBy = S.name; sendDial(); drawDial(); updateLive(); };
-  svg.addEventListener("pointerdown", e => { if (!canDrag()) return; S.dragging = true; svg.setPointerCapture(e.pointerId); set(valueAt(e)); });
+  svg.addEventListener("pointerdown", e => { if (!canDrag()) return; e.preventDefault(); S.dragging = true; svg.setPointerCapture(e.pointerId); set(valueAt(e)); });
   svg.addEventListener("pointermove", e => { if (S.dragging) set(valueAt(e)); });
   const end = () => { S.dragging = false; drawDial(); };
   svg.addEventListener("pointerup", end);
@@ -813,6 +867,7 @@ function renderGame() {
   $("#clue").innerHTML = g.clue ? `<span class="q">${t("quoteOpen")}</span> ${esc(g.clue)} <span class="q">${t("quoteClose")}</span>` : "";
   $("#score").innerHTML = g.played ? `<b>${g.score}</b> ${t("score", g.played)}` : "";
   drawDial();
+  phaseSounds(g);
 
   const online = ps.filter(p => p.online).length;
   const key = [g.phase, g.round, g.psychic, amPsy, online >= 2, S.lang].join("|");
