@@ -103,6 +103,78 @@
   --face:#0D3E5C; --rim:rgba(220,240,255,.16); --field:rgba(220,240,255,.07);
 }
 
+/* kawaii : bleu pastel, rose pastel, blanc */
+:root[data-palette="kawaii"]{
+  --bg:#FFF7FB; --ink:#5A4A6B; --muted:#A08BB5; --line:rgba(90,74,107,.14);
+  --face:#8EC5EE; --face-ink:#FFFFFF; --rim:rgba(255,255,255,.4);
+  --needle:#FFFFFF; --z2:#FFE3F0; --z3:#FFC2DC; --z4:#FF8FC0;
+  --accent:#FF8DC3; --accent-ink:#4A2340; --field:rgba(142,197,238,.2);
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="kawaii"]:not([data-theme="light"]){
+    --bg:#231F35; --ink:#FCEFF7; --muted:#B9A7D3; --line:rgba(252,239,247,.14);
+    --face:#3A4D7A; --face-ink:#F4F9FF; --rim:rgba(244,249,255,.18); --field:rgba(252,239,247,.07);
+  }
+}
+:root[data-palette="kawaii"][data-theme="dark"]{
+  --bg:#231F35; --ink:#FCEFF7; --muted:#B9A7D3; --line:rgba(252,239,247,.14);
+  --face:#3A4D7A; --face-ink:#F4F9FF; --rim:rgba(244,249,255,.18); --field:rgba(252,239,247,.07);
+}
+
+/* coucher de soleil : peche, corail, violet profond */
+:root[data-palette="sunset"]{
+  --bg:#FFF1E6; --ink:#3B1E3F; --muted:#8C6177; --line:rgba(59,30,63,.14);
+  --face:#4B1D52; --face-ink:#FFE9DA; --rim:rgba(255,233,218,.2);
+  --needle:#FFE9DA; --z2:#FFD27A; --z3:#FF9466; --z4:#FF5E7E;
+  --accent:#FF6B6B; --accent-ink:#fff; --field:rgba(59,30,63,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="sunset"]:not([data-theme="light"]){
+    --bg:#1C0F22; --ink:#FFE9DA; --muted:#C08FA0; --line:rgba(255,233,218,.14);
+    --face:#3A1541; --rim:rgba(255,233,218,.16); --field:rgba(255,233,218,.07);
+  }
+}
+:root[data-palette="sunset"][data-theme="dark"]{
+  --bg:#1C0F22; --ink:#FFE9DA; --muted:#C08FA0; --line:rgba(255,233,218,.14);
+  --face:#3A1541; --rim:rgba(255,233,218,.16); --field:rgba(255,233,218,.07);
+}
+
+/* menthe : vert d'eau frais */
+:root[data-palette="menthe"]{
+  --bg:#EEFBF5; --ink:#12382E; --muted:#4F7C6E; --line:rgba(18,56,46,.14);
+  --face:#1F6B57; --face-ink:#E9FFF6; --rim:rgba(233,255,246,.2);
+  --needle:#FFFDF2; --z2:#E9F7B0; --z3:#9FE3C2; --z4:#4FD1A5;
+  --accent:#18A57E; --accent-ink:#fff; --field:rgba(18,56,46,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root[data-palette="menthe"]:not([data-theme="light"]){
+    --bg:#08201A; --ink:#E3FAF0; --muted:#7FAE9E; --line:rgba(227,250,240,.14);
+    --face:#0F3D32; --rim:rgba(227,250,240,.16); --field:rgba(227,250,240,.07);
+  }
+}
+:root[data-palette="menthe"][data-theme="dark"]{
+  --bg:#08201A; --ink:#E3FAF0; --muted:#7FAE9E; --line:rgba(227,250,240,.14);
+  --face:#0F3D32; --rim:rgba(227,250,240,.16); --field:rgba(227,250,240,.07);
+}
+
+/* neon : toujours sombre, rose et cyan fluo */
+:root[data-palette="neon"]{
+  --bg:#0B0716; --ink:#F5F0FF; --muted:#9C8FC0; --line:rgba(245,240,255,.14);
+  --face:#160F2E; --face-ink:#E8E0FF; --rim:rgba(0,240,255,.25);
+  --needle:#00F0FF; --z2:#7CFFCB; --z3:#00E5FF; --z4:#FF3DCB;
+  --accent:#FF3DCB; --accent-ink:#12051F; --field:rgba(245,240,255,.08);
+  color-scheme:dark;
+}
+
+/* or et nuit : toujours sombre, bleu nuit et dore */
+:root[data-palette="luxe"]{
+  --bg:#0E1424; --ink:#F4E9D0; --muted:#A69A7E; --line:rgba(244,233,208,.14);
+  --face:#18223A; --face-ink:#F4E9D0; --rim:rgba(212,175,95,.3);
+  --needle:#E9C46A; --z2:#F6E7B8; --z3:#E9C46A; --z4:#C9962B;
+  --accent:#D4AF5F; --accent-ink:#1A1408; --field:rgba(244,233,208,.07);
+  color-scheme:dark;
+}
+
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{margin:0;min-height:100%}
@@ -199,14 +271,13 @@ h2{font-size:15px;font-weight:600;color:var(--muted);margin:40px 0 0}
 .palette summary{list-style:none;cursor:pointer;font-size:18px;line-height:1;padding:8px;border-radius:999px;background:var(--field)}
 .palette summary::-webkit-details-marker{display:none}
 .palette[open] summary{background:var(--accent)}
-.palette .swatches{position:absolute;right:0;top:calc(100% + 8px);z-index:5;display:flex;gap:10px;padding:10px 12px;border-radius:16px;background:var(--bg);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.palette .swatches{position:absolute;right:0;top:calc(100% + 8px);z-index:5;display:grid;grid-template-columns:repeat(5,28px);gap:10px;padding:10px 12px;border-radius:16px;background:var(--bg);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.14)}
 .swatch{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--dot);padding:0;cursor:pointer;flex:none}
 .swatch:hover{transform:scale(1.1)}
-:root[data-palette="basique"] .swatch[data-palette-key="basique"],
-:root[data-palette="pastel"] .swatch[data-palette-key="pastel"],
-:root[data-palette="noirblanc"] .swatch[data-palette-key="noirblanc"],
-:root[data-palette="nuit"] .swatch[data-palette-key="nuit"],
-:root[data-palette="ciel"] .swatch[data-palette-key="ciel"]{border-color:var(--ink);border-width:3px}
+.swatch.active{border-color:var(--ink);border-width:3px}
+.actions .palette .swatches{left:0;right:auto}
+.sndbtn{border:0;cursor:pointer;font-size:18px;line-height:1;padding:8px;border-radius:999px;background:var(--field)}
+.sndbtn[aria-pressed="true"]{opacity:.6}
 
 .wedgeRot{transform-box:view-box;transform-origin:200px 214px}
 @media (prefers-reduced-motion:no-preference){
@@ -270,7 +341,12 @@ const PALETTES = [
   { key: "pastel", name: "Pastel", dot: "#FF8FB3" },
   { key: "noirblanc", name: "Noir et blanc", dot: "linear-gradient(135deg,#111 50%,#fff 50%)" },
   { key: "nuit", name: "Nuit", dot: "#5865E0" },
-  { key: "ciel", name: "Ciel", dot: "#2FA7E0" }
+  { key: "ciel", name: "Ciel", dot: "#2FA7E0" },
+  { key: "kawaii", name: "Kawaii", dot: "linear-gradient(135deg,#FFC2DC 50%,#A8D8F5 50%)" },
+  { key: "sunset", name: "Coucher de soleil", dot: "linear-gradient(135deg,#FFB35C,#FF5E7E 55%,#4B1D52)" },
+  { key: "menthe", name: "Menthe", dot: "#4FD1A5" },
+  { key: "neon", name: "Néon", dot: "linear-gradient(135deg,#FF3DCB 50%,#00E5FF 50%)" },
+  { key: "luxe", name: "Or et nuit", dot: "linear-gradient(135deg,#0E1424 50%,#E9C46A 50%)" }
 ];
 const LANGS = ["fr", "en"];
 const I18N = {
@@ -283,6 +359,7 @@ const I18N = {
     peerFail: "Le module de connexion n'a pas pu se charger. Recharge la page.",
     themeTitle: "Changer de thème",
     langTitle: "Changer de langue",
+    soundOff: "Couper le son", soundOn: "Remettre le son",
     leave: "Quitter",
     leaveConfirm: "Si tu quittes, la partie s'arrête pour tout le monde. Quitter ?",
     left: "Gauche", right: "Droite",
@@ -331,6 +408,7 @@ const I18N = {
     peerFail: "The connection module couldn't load. Reload the page.",
     themeTitle: "Change theme",
     langTitle: "Change language",
+    soundOff: "Mute sound", soundOn: "Turn sound on",
     leave: "Leave",
     leaveConfirm: "If you leave, the game ends for everyone. Leave?",
     left: "Left", right: "Right",
@@ -380,7 +458,8 @@ const S = {
   players: [],                // what everyone renders
   g: null, dial: 50, dialBy: null, dialRound: null, dragging: false,
   view: "home", error: "", panelKey: "", revealedRound: -1, spunKey: "", draftL: "", draftR: "",
-  lang: (LANGS.includes(store.get("wl-lang")) ? store.get("wl-lang") : "fr")
+  lang: (LANGS.includes(store.get("wl-lang")) ? store.get("wl-lang") : "fr"),
+  muted: store.get("wl-muted") === "1"
 };
 function t(key, ...args) {
   const v = I18N[S.lang][key];
@@ -389,9 +468,21 @@ function t(key, ...args) {
 function setPalette(key) {
   document.documentElement.setAttribute("data-palette", key);
   store.set("wl-palette", key);
+  for (const b of $$(".swatch")) b.classList.toggle("active", b.dataset.paletteKey === key);
+}
+function soundBtnHTML() {
+  return `<button type="button" class="sndbtn" aria-pressed="${S.muted}" title="${esc(t(S.muted ? "soundOn" : "soundOff"))}">${S.muted ? "🔇" : "🔊"}</button>`;
+}
+function bindSoundBtn(root) {
+  for (const b of $$(".sndbtn", root)) b.onclick = () => {
+    S.muted = !S.muted;
+    store.set("wl-muted", S.muted ? "1" : "0");
+    for (const x of $$(".sndbtn")) { x.textContent = S.muted ? "🔇" : "🔊"; x.title = t(S.muted ? "soundOn" : "soundOff"); x.setAttribute("aria-pressed", S.muted); }
+  };
 }
 function paletteSwatchesHTML() {
-  return PALETTES.map(p => `<button type="button" class="swatch" data-palette-key="${p.key}" style="--dot:${p.dot}" aria-label="${esc(p.name)}" title="${esc(p.name)}"></button>`).join("");
+  const cur = document.documentElement.getAttribute("data-palette");
+  return PALETTES.map(p => `<button type="button" class="swatch${p.key === cur ? " active" : ""}" data-palette-key="${p.key}" style="--dot:${p.dot}" aria-label="${esc(p.name)}" title="${esc(p.name)}"></button>`).join("");
 }
 function bindPaletteSwatches(root) {
   for (const b of $$(".swatch", root)) b.onclick = () => { setPalette(b.dataset.paletteKey); const d = b.closest("details"); if (d) d.open = false; };
@@ -459,7 +550,7 @@ document.addEventListener("pointerdown", () => {
   if (actx && actx.state === "suspended") actx.resume().catch(() => {});
 }, { once: true });
 function playSpinSound() {
-  if (!actx || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!actx || S.muted || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
     const now = actx.currentTime, dur = SPIN_S;
     const master = actx.createGain();
@@ -500,7 +591,7 @@ function playSpinSound() {
 }
 let lastTickAt = 0;
 function playTick() {
-  if (!actx || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!actx || S.muted || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const now = actx.currentTime;
   if (now - lastTickAt < .07) return;
   lastTickAt = now;
@@ -532,7 +623,7 @@ function tone(freq, at, dur, { type = "sine", vol = .2, to = null } = {}) {
 }
 // the clue is in: a bright two-note "ding-dong" so guessers know to grab the needle
 function playClueSound() {
-  if (!actx) return;
+  if (!actx || S.muted) return;
   try {
     const now = actx.currentTime;
     tone(784, now, .35, { type: "triangle", vol: .22 });
@@ -541,7 +632,7 @@ function playClueSound() {
 }
 // one sound per score: 0 = sad trombone, 2 = single note, 3 = two-note rise, 4 = fanfare + sparkle
 function playScoreSound(pts) {
-  if (!actx) return;
+  if (!actx || S.muted) return;
   try {
     const now = actx.currentTime;
     if (pts === 4) {
@@ -560,7 +651,7 @@ function playScoreSound(pts) {
 }
 // a tiny blip when someone joins (or comes back)
 function playJoinSound() {
-  if (!actx) return;
+  if (!actx || S.muted) return;
   try { tone(1320, actx.currentTime, .09, { vol: .25 }); } catch {}
 }
 let onlineSeen = null;
@@ -765,6 +856,7 @@ function renderHome() {
     ${typeof Peer === "undefined" ? `<div class="note err" style="margin-top:20px">${t("peerFail")}</div>` : ""}
     <div class="actions" style="margin-top:28px">
       <details class="palette"><summary title="${esc(t("themeTitle"))}">🎨</summary><div class="swatches">${paletteSwatchesHTML()}</div></details>
+      ${soundBtnHTML()}
       ${langSwitchHTML("inline")}
     </div>
   `;
@@ -777,6 +869,7 @@ function renderHome() {
   $("#nick").onkeydown = e => { if (e.key === "Enter") go(); };
   if ($("#own")) $("#own").onclick = () => { readName(); history.replaceState(null, "", location.pathname + location.search); startHost("wl-" + rid(5), null); };
   bindPaletteSwatches($("#app"));
+  bindSoundBtn($("#app"));
   bindLangSwitch($("#app"));
 }
 
@@ -786,6 +879,7 @@ function ensureGameShell() {
     <div class="top">${mark("small")}<span class="grow"></span>
       ${langSwitchHTML()}
       <details class="palette" id="paletteBtn"><summary title="${esc(t("themeTitle"))}">🎨</summary><div class="swatches">${paletteSwatchesHTML()}</div></details>
+      ${soundBtnHTML()}
       <span class="code" id="code"></span><button class="link" id="leave">${t("leave")}</button></div>
     <ul class="players" id="players"></ul>
     <section class="stage">${dialSVG()}
@@ -796,6 +890,7 @@ function ensureGameShell() {
     <div class="score" id="score"></div>`;
   $("#leave").onclick = () => { if (!S.isHost || confirm(t("leaveConfirm"))) leave(); };
   bindPaletteSwatches($("#paletteBtn"));
+  bindSoundBtn($("#app"));
   bindLangSwitch($("#app"));
   bindDrag();
 }
@@ -870,6 +965,7 @@ function renderGame() {
   $("#dial").setAttribute("aria-label", t("dialAria"));
   const paletteSummary = $("#paletteBtn summary"); if (paletteSummary) paletteSummary.title = t("themeTitle");
   for (const b of $$(".top .langsw button")) b.classList.toggle("active", b.dataset.lang === S.lang);
+  for (const b of $$(".top .sndbtn")) b.title = t(S.muted ? "soundOn" : "soundOff");
   $("#players").innerHTML = ps.map(p => `<li class="${p.pid === g.psychic ? "psy" : ""} ${p.pid === S.pid ? "me" : ""}" style="${p.online ? "" : "opacity:.4"}">
       <span class="dot" style="--c:${colorOf(p.pid)}">${esc((p.name[0] || "?").toUpperCase())}</span>${esc(p.name)}${p.pid === S.pid ? esc(t("you")) : ""}${p.online ? "" : esc(t("gone"))}${p.pid === g.psychic ? `<span class="tag">${esc(t("medium"))}</span>` : ""}</li>`).join("");
   const amPsy = g.psychic === S.pid, psyName = nameOf(g.psychic);
