@@ -517,7 +517,7 @@ function playTick() {
 }
 
 /* ---------- phase sounds ---------- */
-const PHASE_VOL = .45; // overall loudness of the clue/score sounds
+const PHASE_VOL = .15; // overall loudness of the clue/score sounds
 function tone(freq, at, dur, { type = "sine", vol = .2, to = null } = {}) {
   const osc = actx.createOscillator();
   osc.type = type;
@@ -861,6 +861,9 @@ function renderGame() {
   $("#players").innerHTML = ps.map(p => `<li class="${p.pid === g.psychic ? "psy" : ""} ${p.pid === S.pid ? "me" : ""}" style="${p.online ? "" : "opacity:.4"}">
       <span class="dot" style="--c:${colorOf(p.pid)}">${esc((p.name[0] || "?").toUpperCase())}</span>${esc(p.name)}${p.pid === S.pid ? esc(t("you")) : ""}${p.online ? "" : esc(t("gone"))}${p.pid === g.psychic ? `<span class="tag">${esc(t("medium"))}</span>` : ""}</li>`).join("");
   const amPsy = g.psychic === S.pid, psyName = nameOf(g.psychic);
+  if (g.left && g.right) { S.lastL = g.left; S.lastR = g.right; } // remembered so the next psychic can keep the same spectrum
+  const themeKey = `${g.round}:${g.psychic}`;
+  if (g.phase === "theme" && amPsy && S.themeKey !== themeKey) { S.themeKey = themeKey; S.draftL = S.lastL || ""; S.draftR = S.lastR || ""; }
   const typingTheme = g.phase === "theme" && amPsy;
   const L = typingTheme ? S.draftL : g.left, Rr = typingTheme ? S.draftR : g.right;
   $("#endL").innerHTML = L ? esc(L) : `<span class="ghost">${esc(t("left"))}</span>`;
@@ -944,7 +947,6 @@ function renderGame() {
       <p class="muted">${t("nextPsy", esc(next))}</p>
       <div class="actions"><button class="btn" id="next">${t("nextRound")}</button></div>`;
     $("#next").onclick = () => act("next", { round: g.round });
-    S.draftL = g.left; S.draftR = g.right; // next psychic starts from the same spectrum
   }
 }
 function updateLive() {
