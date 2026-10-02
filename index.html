@@ -558,6 +558,17 @@ function playScoreSound(pts) {
     }
   } catch {}
 }
+// a tiny blip when someone joins (or comes back)
+function playJoinSound() {
+  if (!actx) return;
+  try { tone(1320, actx.currentTime, .09, { vol: .25 }); } catch {}
+}
+let onlineSeen = null;
+function joinSounds(players) {
+  const now = new Set(players.filter(p => p.online).map(p => p.pid));
+  if (onlineSeen && [...now].some(pid => !onlineSeen.has(pid) && pid !== S.pid)) playJoinSound();
+  onlineSeen = now;
+}
 let soundKey = null;
 function phaseSounds(g) {
   const key = `${g.round}:${g.phase}`;
@@ -587,6 +598,7 @@ function apply(g, pid, a, present) {
     case "theme":
       if (g.phase === "theme" && pid === g.psychic && a.round === g.round && str(a.left, 40) && str(a.right, 40)) {
         g.left = str(a.left, 40); g.right = str(a.right, 40);
+        g.lastLeft = g.left; g.lastRight = g.right; // kept across rounds so the next psychic can reuse it
         g.target = Math.round((12.5 + Math.random() * 75) * 10) / 10; g.phase = "clue";
       }
       break;
@@ -707,13 +719,13 @@ function startClient(code) {
 
 function fail(msg) {
   try { S.peer && S.peer.destroy(); } catch {}
-  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null;
+  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null; onlineSeen = null; soundKey = null;
   S.view = "home"; S.error = msg; render();
 }
 function leave() {
   try { S.peer && S.peer.destroy(); } catch {}
   store.del("wl-host", true);
-  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null; S.code = null; S.error = "";
+  S.peer = null; S.hostConn = null; S.isHost = false; S.g = null; S.code = null; S.error = ""; onlineSeen = null; soundKey = null;
   history.replaceState(null, "", location.pathname + location.search);
   S.view = "home"; render();
 }
@@ -863,7 +875,7 @@ function renderGame() {
   const amPsy = g.psychic === S.pid, psyName = nameOf(g.psychic);
   if (g.left && g.right) { S.lastL = g.left; S.lastR = g.right; } // remembered so the next psychic can keep the same spectrum
   const themeKey = `${g.round}:${g.psychic}`;
-  if (g.phase === "theme" && amPsy && S.themeKey !== themeKey) { S.themeKey = themeKey; S.draftL = S.lastL || ""; S.draftR = S.lastR || ""; }
+  if (g.phase === "theme" && amPsy && S.themeKey !== themeKey) { S.themeKey = themeKey; S.draftL = g.lastLeft || S.lastL || ""; S.draftR = g.lastRight || S.lastR || ""; }
   const typingTheme = g.phase === "theme" && amPsy;
   const L = typingTheme ? S.draftL : g.left, Rr = typingTheme ? S.draftR : g.right;
   $("#endL").innerHTML = L ? esc(L) : `<span class="ghost">${esc(t("left"))}</span>`;
@@ -872,6 +884,7 @@ function renderGame() {
   $("#score").innerHTML = g.played ? `<b>${g.score}</b> ${t("score", g.played)}` : "";
   drawDial();
   phaseSounds(g);
+  joinSounds(ps);
 
   const online = ps.filter(p => p.online).length;
   const key = [g.phase, g.round, g.psychic, amPsy, online >= 2, S.lang].join("|");
