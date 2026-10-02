@@ -600,7 +600,7 @@ function playTick() {
     osc.type = "sine";
     osc.frequency.setValueAtTime(190 + Math.random() * 60, now);
     const gain = actx.createGain();
-    gain.gain.setValueAtTime(.07, now);
+    gain.gain.setValueAtTime(.025, now);
     gain.gain.exponentialRampToValueAtTime(.001, now + .08);
     osc.connect(gain).connect(actx.destination);
     osc.start(now); osc.stop(now + .09);
